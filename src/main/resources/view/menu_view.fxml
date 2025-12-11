@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+
+<StackPane fx:id="root" 
+           xmlns="http://javafx.com/javafx/17.0.1"
+           xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="com.ingunal.brokendeal.beta.controller.MenuController">
+
+    <!-- Fondo animado (GIF) -->
+    <children>
+
+        <!-- Fondo GIF -->
+        <ImageView fx:id="backgroundImage"
+                   preserveRatio="false"
+                   smooth="false"
+                   fitWidth="800" fitHeight="600"/>
+
+        <!-- Contenedor general -->
+        <BorderPane prefWidth="800" prefHeight="600">
+
+            <!-- Zona central (botones) -->
+            <center>
+                <HBox fx:id="centerBox"
+                      alignment="CENTER"
+                      spacing="20">
+                    <children>
+                        <ImageView fx:id="btnPoker"
+                                   onMouseClicked="#onPokerClicked" />
+                        <ImageView fx:id="btnBlackjack"
+                                   onMouseClicked="#onBlackjackClicked" />
+                    </children>
+                </HBox>
+            </center>
+
+            <!-- Parte inferior (botón salir) -->
+            <bottom>
+                <VBox alignment="CENTER">
+                    <children>
+                        <ImageView fx:id="btnQuit"
+                                   onMouseClicked="#onQuitClicked" />
+                    </children>
+                </VBox>
+            </bottom>
+
+        </BorderPane>
+
+    </children>
+</StackPane>

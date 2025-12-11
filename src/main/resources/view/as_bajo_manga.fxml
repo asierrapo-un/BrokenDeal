@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ingunal.brokendeal.beta.controller.AsBajoMangaController"
+            style="-fx-background-color: black;">
+
+    <!-- Texto superior -->
+    <top>
+        <Label fx:id="tituloLabel"
+               text="Selecciona una carta"
+               alignment="CENTER"
+               style="-fx-text-fill: white; -fx-font-size: 18px;"
+               BorderPane.alignment="CENTER"/>
+    </top>
+
+    <!-- Cartas -->
+    <center>
+        <HBox fx:id="cartasBox"
+              alignment="CENTER"
+              spacing="20"
+              padding="20">
+        </HBox>
+    </center>
+
+    <!-- Click para continuar -->
+    <bottom>
+        <Label fx:id="clickLabel"
+               text="Haz clic para continuar"
+               alignment="CENTER"
+               style="-fx-text-fill: white; -fx-font-size: 18px;"
+               BorderPane.alignment="CENTER"/>
+    </bottom>
+
+</BorderPane>

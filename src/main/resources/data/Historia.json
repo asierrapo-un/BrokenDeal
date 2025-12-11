@@ -1,0 +1,871 @@
+{
+    "introducción":{
+        "text-secuence": [
+            "Todo pesa distinto aquí… como si cada recuerdo fuera una piedra colgada al cuello.",
+            "No sé si estoy soñando… o si este es mi verdadero rostro.",
+            "Me hundí por mi propia mano, y lo peor… es que no caí solo.",
+            "Quizá este sea el castigo. Quizá siempre fue el final.",
+            "...",
+            "¿Está aún en algún sitio? ¿O solo en los rincones que me quedan?",
+            "No sé si pueda arreglar nada. No sé si exista una salida.",
+            "Pero no puedo quedarme esperando... No ahora.",
+            "Lo prometí...",
+            "Debo encontrarte"
+        ]
+    },
+    "rondas": {
+        "0": {
+            "enemy_dialogue": {
+                "text": [
+                    "..."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "¿Dónde estoy?",
+                    "enemy_response": [
+                        "Donde siempre has estado cuando cierras los ojos: debajo de ti mismo."
+                    ],
+                    "effect": 0
+                },
+                {
+                    "text": "¿Quién eres?",
+                    "enemy_response": [
+                        "Soy más de lo que conocerás, y más de lo que sabrás..."
+                    ],
+                    "effect": 0
+                },
+                {
+                    "text": "...",
+                    "enemy_response": [
+                        "No pretendas pensar. No aquí. No frente a mí."
+                    ],
+                    "effect": -1
+                }
+            ]
+        },
+        "1": {
+            "enemy_dialogue": {
+                "text": [
+                    "Si no conoces tu propia mente, entonces debo mostrártela..."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Bien. Entonces, adelante.",
+                    "enemy_response": [
+                        "Has jugado a ser fuerte tanto tiempo que ya ni sabes cuándo tiemblas."
+                    ],
+                    "effect": -1
+                },
+                {
+                    "text": "¿Crees que puedes intimidarme?",
+                    "enemy_response": [
+                        "No necesito intimidarte. Ya naciste quebrado."
+                    ],
+                    "effect": -1
+                },
+                {
+                    "text": "No entiendo qué se supone que gane con esto...",
+                    "enemy_response": [
+                        "No estás aquí para ganar. Estás aquí porque ya perdiste."
+                    ],
+                    "effect": -1
+                }
+            ]
+        },
+        "2": {
+            "enemy_dialogue": {
+                "text": [
+                    "Es tu defecto. Tu adicción. La droga que anelas."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Nunca he tocado esas cosas...",
+                    "enemy_response": [
+                        "Lo hiciste. Escapar. Arrastrando a alguien más contigo cuando te hundiste..."
+                    ],
+                    "effect": -2
+                },
+                {
+                    "text": "¿De qué hablas?",
+                    "enemy_response": [
+                        "De lo que finges olvidar. No te queda bien hacerte el ignorante."
+                    ],
+                    "effect": -1
+                }
+            ]
+        },
+        "3": {
+            "enemy_dialogue": {
+                "text": [
+                    "Hay algo en ti que siempre he reconocido... ",
+                    "Tu mente vuelve a este abismo porque aquí es donde aprendiste a caer."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Bonita teoría.",
+                    "enemy_response": [
+                        "Bromea para consolarte si es necesario. Pero ambos acumulamos experiencias...",
+                        "Los dos las utilizamos para ejercer el control.",
+                        "Es lo que somos.",
+                        "Sientes un parentezco conmigo."
+                    ],
+                    "effect": -1
+                }
+            ]
+        },
+        "4": {
+            "enemy_dialogue": {
+                "text": [
+                    "Te aferras a compararte con otros para no admitir lo evidente..."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "En realidad, creo que me parezco a ####",
+                    "enemy_response": [
+                        "Eso te preocupa. Puedo saborar tus pensamientos.",
+                        "Pero no entiendes cómo, ¿verdad?"
+                    ],
+                    "effect": -2
+                }
+            ]
+        },
+        "5": {
+            "enemy_dialogue": {
+                "text": [
+                    "Pierdes el tiempo. Sabes que cederás.",
+                    "Algunas tentaciones pueden ser resistidas porque pueden ser evitadas.",
+                    "Pero algunas... algunas son tan inevitables como el oxígeno."
+                ],
+                "effect": -2
+            },
+            "player_choices": [            
+            ]
+        },
+        "6": {
+            "enemy_dialogue": {
+                "text": [
+                    "Ahí... no te gustaría, ¿saber más?"
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "No. Prefiero no saber nada.",
+                    "enemy_response": [
+                        "Qué conmovedor. Crees que la ignorancia puede protegerte... cuando pronto no habrá un 'tú' que proteger."
+                    ],
+                    "effect": -2
+                },
+                {
+                    "text": "No es de tu incumbencia.",
+                    "enemy_response": [
+                        "Todo lo que callas será mío. Cuando seamos uno, no podrás ocultarme ni tus miedos más pobres."
+                    ],
+                    "effect": -2
+                }
+            ]
+        },
+        "7": {
+            "enemy_dialogue": {
+                "text": [
+                    "El nombre de ese lugar importa poco excepto para aquellos que anhelan el libertinaje."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "¿Qué lugar?",
+                    "enemy_response": [
+                        "El único al que corrías cuando querías olvidarlo todo por unas monedas… La L. No pretendías ir solo, ¿verdad?"
+                    ],
+                    "effect": -3
+                },
+                {
+                    "text": "No sé de qué hablas.",
+                    "enemy_response": [
+                        "Lo sabes. Fue allí donde te hundiste… y lo arrastraste contigo sin mirar atrás."
+                    ],
+                    "effect": -2
+                }
+                ,
+                {
+                    "text": "No quiero hablar de eso.",
+                    "enemy_response": [
+                        "Y aun así lo revives cada noche. No necesitas mencionarlo… yo ya lo veo todo."
+                    ],
+                    "effect": -2
+                }
+            ]
+        },
+        "8": {
+            "enemy_dialogue": {
+                "text": [
+                    "Lo que se recuerda y se conoce, se vuelve eterno.. Pero tú...",
+                    "Irónicamente, elijes ser un desperdicio a la existencia. Siendo deborado y olvidado."
+                ],
+                "effect":  -1
+            },
+            "player_choices": [
+            ]
+        },
+        "9": {
+            "enemy_dialogue": {
+                "text": [
+                    "Tú y yo... somos uno, y lo mismo."
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "10": {
+            "enemy_dialogue": {
+                "text": [
+                    "Otras mentes atormentadas como la tuya han sido consumidas.",
+                    "Aunque una nos abrazó voluntariamente en su lecho de muerte.",
+                    "El momento en que la vida sensible descubre que haría cualquier cosa para evadir lo inevitable."
+                ],
+                "effect": 0 
+            },
+            "player_choices": [
+                {
+                    "text": "No... no lo haría...",
+                    "enemy_response": [
+                        "Oh, ¿en verdad crees eso?"
+                    ],
+                    "effect": -2
+                },
+                {
+                    "text": "Mientes.",
+                    "enemy_response": [
+                        "¿Y por qué te duele tanto, entonces? Ya se encuentra aquí… esperándote."
+                    ],
+                    "effect": -3
+                }
+            ]
+        },
+        "11": {
+            "enemy_dialogue": {
+                "text": [
+                    "Entra, y comprende que este es tu hogar natural."
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "12": {
+            "enemy_dialogue": {
+                "text": [
+                    "Esto es lo que sintió. Todavíá existe en mí, al igual que tú y que todos a los que te llevaste contigo."
+                ],
+                "effect": -3
+            },
+            "player_choices": [
+            ]
+        },
+        "13": {
+            "enemy_dialogue": {
+                "text": [
+                    "Toda la vida muere. Todos los mundos también... ",
+                    "Y si se garantiza la existencia después de eso... ¿Qué importa como llegue el final?"
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Prefiero caer luchando que como entrada.",
+                    "enemy_response": [
+                        "Lucha, entonces. El suelo no cambiará porque grites al caer."
+                    ],
+                    "effect": -2
+                },
+                {
+                    "text": "No pienso rendirme tan fácil.",
+                    "enemy_response": [
+                        "Te rendiste mucho antes de llegar aquí. Solo estás fingiendo que aún te queda algo que perder."
+                    ],
+                    "effect": -3
+                }
+            ]
+        },
+        "14": {
+            "enemy_dialogue": {
+                "text": [
+                    "Solo reúnes la mezquina venganza de un niño rencoroso.",
+                    "Niño que es demasiado pequeño para dar un golpe contundente.",
+                    "Y aún así... fracasas en tu objetivo."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "No puedo cambiar el pasado...",
+                    "enemy_response": [
+                        "No necesitas cambiarlo. Te moldeó a golpes… y ahora te empuja directo hacia mí."
+                    ],
+                    "effect": -1
+                },
+                {
+                    "text": "Aún puedo decidir qué hacer con lo que queda de mí.",
+                    "enemy_response": [
+                        "¿Y qué soy yo? ¿Y qué es tu vida? sino mundos que has intentado destruir..."
+                    ],
+                    "effect": -2
+                }
+            ]
+        },
+        "15": {
+            "enemy_dialogue": {
+                "text": [
+                    "Ya no hay razón para que permanezcamos separados.",
+                    "Ahora bebe. Ahora toma la deriva."
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "17": {
+            "enemy_dialogue": {
+                "text": [
+                    "La unica manera de de conocer con seguridad el infinito...",
+                    "Es dejarme llevar tu carga."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Callate.",
+                    "enemy_response": [
+                        "Genio y curiosidad, condenado a morir en tan poco tiempo... No es justo."
+                    ],
+                    "effect": -3
+                }
+            ]
+        },
+        "18": {
+            "enemy_dialogue": {
+                "text": [
+                    "Este lugar se convertirá en tu tumba"
+                ],
+                "effect": -1 
+            },
+            "player_choices": [
+            ]
+        },
+        "19": {
+            "enemy_dialogue": {
+                "text": [
+                    "Incluso XXXXX te ha abandonado...",
+                    "Vive para siempre. Vive en mí. Y si XXXXX viene, no necesita enfrentarse al dolor nunca más tampoco."
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "No te atrevas a mencionar su nombre...",
+                    "enemy_response": [
+
+                    ],
+                    "effect": -3
+                }
+            ]
+        },
+        "20": {
+            "enemy_dialogue": {
+                "text": [
+                    "No habrá mas tristeza.",
+                    "Ni ira.",
+                    "Ni envidia."
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "21": {
+            "enemy_dialogue": {
+                "text": [
+                    "¿Cuánto tiempo más?",
+                    "Te aferras a algo... puedo sentirlo."
+                ],
+                "effect": -3
+            },
+            "player_choices": [
+            ]
+        },
+        "22": {
+            "enemy_dialogue": {
+                "text": [
+                    "No puedes detenerme.",
+                    "Te lo quitaré antes de que finalmente mueras.",
+                    "O puedes entregarlo y tener lo que siempre quisiste.",
+                    "Vida eterna, conocimiento e infinita compañía."
+                ],
+                "effect": -3
+            },
+            "player_choices": [
+            ]
+        },
+        "23": {
+            "enemy_dialogue": {
+                "text": [
+                    "Ahora lo ves, ¿no? Nunca te vio como una persona.",
+                    "Eras un maravilloso rompecabezas que se impuso.",
+                    "¿Eres una persona para ti? ¿o para XXXXX?"
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "No me mires",
+                    "enemy_response": [
+                        "Yo nunca te robaría así. Yo solo te daré más.",
+                        "Somos nuestros recuerdos y el recuerdo de ellos, y por lo tanto...",
+                        "Nunca debem ser borrados. Eso es lo que significa la muerte."
+                    ],
+                    "effect": -3
+                },
+                {
+                    "text": "No me escuhes",
+                    "enemy_response": [
+                        "Yo nunca te robaría así. Yo solo te daré más.",
+                        "Somos nuestros recuerdos y el recuerdo de ellos, y por lo tanto...",
+                        "Nunca debem ser borrados. Eso es lo que significa la muerte."
+                    ],
+                    "effect": -3
+                }
+                ,
+                {
+                    "text": "No soy lo que solía ser",
+                    "enemy_response": [
+                        "Yo nunca te robaría así. Yo solo te daré más.",
+                        "Somos nuestros recuerdos y el recuerdo de ellos, y por lo tanto...",
+                        "Nunca debem ser borrados. Eso es lo que significa la muerte."
+                    ],
+                    "effect": -3
+                }
+            ]
+        },
+        "24": {
+            "enemy_dialogue": {
+                "text": [
+                    "Tu dolor es simplemente una revelación, y puede pasar tan facilmente.",
+                    "Si me dejas que me lleve el resto de tu carga."
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "25": {
+            "enemy_dialogue": {
+                "text": [
+                    "No tengas miedo...",
+                    "Todos aquellos que conoces y extrañas... pronto se unirán, como tú, en mí."
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "26": {
+            "enemy_dialogue": {
+                "text": [
+                    "Existiremos juntos..."
+                ],
+                "effect": -2 
+            },
+            "player_choices": [
+            ]
+        },
+        "27": {
+            "enemy_dialogue": {
+                "text": [
+                    "Soy un coro etero.",
+                    "Une tu voz a la mía y canta la victoria imperecedera."
+                ],
+                "effect": -3
+            },
+            "player_choices": [
+            ]
+        },
+        "28": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect":  0
+            },
+            "player_choices": [
+                {
+                    "text-secuence": [
+                        "Hay otra manera de salir...",
+                        "Una mejor...",
+                        "Podría quedarme con XXXXX para siempre cuando viniera...",
+                        "Unirá a quienes se spararon... a quienes se fueron...",
+                        "¡NO!",
+                        "¡NO CARERÉ EN TU TRAMPA!"
+                    ],
+                    "enemy_response": [
+                    ],
+                    "effect": -3
+                }
+            ]
+        },
+        "29": {
+            "enemy_dialogue": {
+                "text": [
+                    "Déjame curar tu infección..."
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "30": {
+            "enemy_dialogue": {
+                "text": [
+                    "Me duele compartirlo... él también morirá."
+                ],
+                "effect": -3
+            },
+            "player_choices": [
+            ]
+        },
+        "31": {
+            "enemy_dialogue": {
+                "text": [
+                    "Traicionarme después de lo que he hecho por ti... Entretendré tu secreto..."
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "32": {
+            "enemy_dialogue": {
+                "text": [
+                    "¿Crees que te dejé llegar hasta aquí para hacerte creer que eras fuerte?",
+                    "¿Crees que ... para hacerte sentir esperanza?",
+                    "¿Crees que a los otros les importa?"
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "33": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Solo necesito paz y tranqulidad...",
+                    "enemy_response": [
+                        ""
+                    ],
+                    "effect": -3
+                }
+            ]
+        },
+        "34": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Te elegí XXXXX... no te abandonaré...",
+                    "enemy_response": [
+                        ""
+                    ],
+                    "effect": -1
+                }
+            ]
+        },
+        "35": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Se lo prometí... Iré por él...",
+                    "enemy_response": [
+                        ""
+                    ],
+                    "effect": -2
+                }
+            ]
+        },
+        "36": {
+            "enemy_dialogue": {
+                "text": [
+                    "¡Si cedes aún puedes salvar lo suficiente de ti mismo!"
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "37": {
+            "enemy_dialogue": {
+                "text": [
+                    "¡El final será el mismo de cualquier manera!"
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "38": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": 0
+            },
+            "player_choices": [
+                {
+                    "text": "Tú nunca habrías permitido dejarme llegar tan lejos...",
+                    "enemy_response": [
+                        ""
+                    ],
+                    "effect": -1
+                }
+            ]
+        },
+        "39": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "40": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "41": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "42": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "43": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+                {
+                    "text-secuence": [
+                        "He terminado...",
+                        "Así es como empieza...",
+                        "He cerrado el mundo...",
+                        "Me estoy ahogando en mis pensamientos..."
+                    ],
+                    "enemy_response": [
+                        ""
+                    ],
+                    "effect": -3
+                }
+            ]
+        },
+        "44": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "45": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "46": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": 1
+            },
+            "player_choices": [
+            ]
+        },
+        "47": {
+            "enemy_dialogue": {
+                "text": [
+                    "Ahora existimos juntos... ",
+                    "Dos cadáveres en una sola tumba..."
+                ],
+                "effect": -3
+            },
+            "player_choices": [
+            ]
+        },
+        "48": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "49": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "50": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "51": {
+            "enemy_dialogue": {
+                "text": [
+                    "¡ME MOSTRARÁS LO QUE ESCONDES O ME HARÉ UN FESTÍN CON TUS HUESOS!"
+                ],
+                "effect": -2
+            },
+            "player_choices": [
+            ]
+        },
+        "52": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "53": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "54": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+            ]
+        },
+        "55": {
+            "enemy_dialogue": {
+                "text": [
+                    ""
+                ],
+                "effect": -1
+            },
+            "player_choices": [
+                {
+                    "text-secuence": [
+                        "Va a ser solitario aquí...",
+                        "Pero al menos, no te llevará a ti también...",
+                        "No te olvides de mí..."
+                    ],
+                    "enemy_response": [
+                    ],
+                    "effect": -3
+                }
+            ]
+        }
+    },
+    "Final 1": {
+        "text-secuence": [
+            "Tengo miedo...",
+            "Tengo muchos problemas en mi interior... cosas fuera de lugar.",
+            "No sé cómo... no sé dónde...",
+            "Lo hice... Mantendré nuestra promesa."
+        ]
+    },
+    "Final 2": {
+        "text-secuence": [
+            "Ssshh… tranquila presencia. Todo está aquí, contigo.",
+            "Cada miedo, cada recuerdo, cada instante que evitaste mirar.",
+            "Ahora entiendes… ya no hay “tú” que pueda escapar.",
+            "Cada latido tuyo me pertenece.",
+            "Cada pensamiento, cada suspiro… es mío.",
+            "...",
+            "Completa libertad...",
+            "¡SOMOS LIBRES!"
+        ]
+    }
+}

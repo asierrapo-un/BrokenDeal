@@ -1,0 +1,218 @@
+{
+    "Hearts": {
+        "2": {
+            "value": 2,
+            "imgRoute": "data/img/cards/2-Hearts.png"
+        }, 
+        "3": {
+            "value": 3,
+            "imgRoute": "data/img/cards/3-Hearts.png"
+        }, 
+        "4": {
+            "value": 4,
+            "imgRoute": "data/img/cards/4-Hearts.png"
+        }, 
+        "5": {
+            "value": 5,
+            "imgRoute": "data/img/cards/5-Hearts.png"
+        },
+        "6": {
+            "value": 6,
+            "imgRoute": "data/img/cards/6-Hearts.png"
+        },
+        "7": {
+            "value": 7,
+            "imgRoute": "data/img/cards/7-Hearts.png"
+        },
+        "8": {
+            "value": 8,
+            "imgRoute": "data/img/cards/8-Hearts.png"
+        },
+        "9": {
+            "value": 9,
+            "imgRoute": "data/img/cards/9-Hearts.png"
+        },
+        "10": {
+            "value": 10,
+            "imgRoute": "data/img/cards/10-Hearts.png"
+        },
+        "J": {
+            "value": 11,
+            "imgRoute": "data/img/cards/J-Hearts.png"
+        },
+        "Q": {
+            "value": 11,
+            "imgRoute": "data/img/cards/Q-Hearts.png"
+        },
+        "K": {
+            "value": 11,
+            "imgRoute": "data/img/cards/K-Hearts.png"
+        },
+        "A": {
+            "value": 11,
+            "imgRoute": "data/img/cards/A-Hearts.png"
+        }
+    },
+    "Diamonds": {
+        "2": {
+            "value": 2,
+            "imgRoute": "data/img/cards/2-Diamonds.png"
+        }, 
+        "3": {
+            "value": 3,
+            "imgRoute": "data/img/cards/3-Diamonds.png"
+        }, 
+        "4": {
+            "value": 4,
+            "imgRoute": "data/img/cards/4-Diamonds.png"
+        }, 
+        "5": {
+            "value": 5,
+            "imgRoute": "data/img/cards/5-Diamonds.png"
+        },
+        "6": {
+            "value": 6,
+            "imgRoute": "data/img/cards/6-Diamonds.png"
+        },
+        "7": {
+            "value": 7,
+            "imgRoute": "data/img/cards/7-Diamonds.png"
+        },
+        "8": {
+            "value": 8,
+            "imgRoute": "data/img/cards/8-Diamonds.png"
+        },
+        "9": {
+            "value": 9,
+            "imgRoute": "data/img/cards/9-Diamonds.png"
+        },
+        "10": {
+            "value": 10,
+            "imgRoute": "data/img/cards/10-Diamonds.png"
+        },
+        "J": {
+            "value": 11,
+            "imgRoute": "data/img/cards/J-Diamonds.png"
+        },
+        "Q": {
+            "value": 11,
+            "imgRoute": "data/img/cards/Q-Diamonds.png"
+        },
+        "K": {
+            "value": 11,
+            "imgRoute": "data/img/cards/K-Diamonds.png"
+        },
+        "A": {
+            "value": 11,
+            "imgRoute": "data/img/cards/A-Diamonds.png"
+        }
+    },
+    "Spades":{
+        "2": {
+            "value": 2,
+            "imgRoute": "data/img/cards/2-Spades.png"
+        }, 
+        "3": {
+            "value": 3,
+            "imgRoute": "data/img/cards/3-Spades.png"
+        }, 
+        "4": {
+            "value": 4,
+            "imgRoute": "data/img/cards/4-Spades.png"
+        }, 
+        "5": {
+            "value": 5,
+            "imgRoute": "data/img/cards/5-Spades.png"
+        },
+        "6": {
+            "value": 6,
+            "imgRoute": "data/img/cards/6-Spades.png"
+        },
+        "7": {
+            "value": 7,
+            "imgRoute": "data/img/cards/7-Spades.png"
+        },
+        "8": {
+            "value": 8,
+            "imgRoute": "data/img/cards/8-Spades.png"
+        },
+        "9": {
+            "value": 9,
+            "imgRoute": "data/img/cards/9-Spades.png"
+        },
+        "10": {
+            "value": 10,
+            "imgRoute": "data/img/cards/10-Spades.png"
+        },
+        "J": {
+            "value": 11,
+            "imgRoute": "data/img/cards/J-Spades.png"
+        },
+        "Q": {
+            "value": 11,
+            "imgRoute": "data/img/cards/Q-Spades.png"
+        },
+        "K": {
+            "value": 11,
+            "imgRoute": "data/img/cards/K-Spades.png"
+        },
+        "A": {
+            "value": 11,
+            "imgRoute": "data/img/cards/A-Spades.png"
+        }
+    },
+    "Clubs":{
+        "2": {
+            "value": 2,
+            "imgRoute": "data/img/cards/2-Clubs.png"
+        }, 
+        "3": {
+            "value": 3,
+            "imgRoute": "data/img/cards/3-Clubs.png"
+        }, 
+        "4": {
+            "value": 4,
+            "imgRoute": "data/img/cards/4-Clubs.png"
+        }, 
+        "5": {
+            "value": 5,
+            "imgRoute": "data/img/cards/5-Clubs.png"
+        },
+        "6": {
+            "value": 6,
+            "imgRoute": "data/img/cards/6-Clubs.png"
+        },
+        "7": {
+            "value": 7,
+            "imgRoute": "data/img/cards/7-Clubs.png"
+        },
+        "8": {
+            "value": 8,
+            "imgRoute": "data/img/cards/8-Clubs.png"
+        },
+        "9": {
+            "value": 9,
+            "imgRoute": "data/img/cards/9-Clubs.png"
+        },
+        "10": {
+            "value": 10,
+            "imgRoute": "data/img/cards/10-Clubs.png"
+        },
+        "J": {
+            "value": 11,
+            "imgRoute": "data/img/cards/J-Clubs.png"
+        },
+        "Q": {
+            "value": 11,
+            "imgRoute": "data/img/cards/Q-Clubs.png"
+        },
+        "K": {
+            "value": 11,
+            "imgRoute": "data/img/cards/K-Clubs.png"
+        },
+        "A": {
+            "value": 11,
+            "imgRoute": "data/img/cards/A-Clubs.png"
+        }
+    }
+}
