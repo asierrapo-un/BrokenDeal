@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ingunal.brokendeal.beta;
 
 import com.ingunal.brokendeal.beta.controller.*;
@@ -23,10 +19,6 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-/**
- *
- * @author andre
- */
 public class SceneManager {
     private Stage stage;
     
@@ -150,7 +142,7 @@ public class SceneManager {
     }
 
     /** Mostrar selección de "As Bajo la Manga" */
-    public void mostrarAsBajoManga() {
+    public void mostrarAsBajoManga(String game) {
         AsBajoMangaController controller =
             cargarVista("/view/as_bajo_manga.fxml", 1024, 720);
 
@@ -158,22 +150,38 @@ public class SceneManager {
             controller.setSceneManager(this);
             controller.setJugador(jugador);
             controller.setBaraja(baraja);
-            controller.inicializar(); // Cargar 5 cartas aleatorias
+            controller.inicializar(game); // Cargar 5 cartas aleatorias
         }
     }
 
     /** Cargar Poker */
     public void mostrarPoker() {
         System.out.println("→ Iniciando juego de Poker...");
-        controladorJuego.iniciarJuego();
-        // TODO: cargar la vista de juego cuando esté lista
+        mostrarVistaJuego("poker");
     }
 
     /** Cargar Blackjack */
     public void mostrarBlackjack() {
         System.out.println("→ Iniciando juego de Blackjack...");
-        controladorJuego.iniciarJuego();
-        // TODO: cargar la vista de juego cuando esté lista
+        mostrarVistaJuego("blackjack");
+    }
+    
+    /** Mostrar vista del juego (compartida para Poker y BlackJack) */
+    public void mostrarVistaJuego(String tipo) {
+        JuegoViewController controller =
+            cargarVista("/view/juego_view.fxml", 1024, 720);
+        
+        if (controller != null) {
+            controller.setSceneManager(this);
+            controller.setControladorJuego(controladorJuego);
+            controller.setTipoJuego(tipo);
+            
+            // Iniciar el juego
+            controladorJuego.iniciarJuego();
+            
+            // Inicializar la vista
+            controller.inicializarVista();
+        }
     }
 
     /** Cerrar juego */

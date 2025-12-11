@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.ingunal.brokendeal.beta.controller.JuegoViewController"
+           prefWidth="1024" prefHeight="720">
+
+    <!-- Fondo dinámico (cambia según vida del jugador) -->
+    <ImageView fx:id="fondoImageView"
+               preserveRatio="false"
+               fitWidth="1024" 
+               fitHeight="720"
+               smooth="false"/>
+
+    <!-- Contenedor principal -->
+    <BorderPane>
+        
+        <!-- ============= ZONA SUPERIOR: DEALER ============= -->
+        <top>
+            <VBox alignment="CENTER" spacing="10" 
+                  style="-fx-padding: 20 20 10 20;">
+                
+                <!-- Barra de vida del Dealer -->
+                <ImageView fx:id="vidaDealerImageView"
+                           fitWidth="200"
+                           fitHeight="30"
+                           preserveRatio="true"
+                           smooth="false"/>
+                
+                <!-- GIF del Dealer (cambia según vida del jugador) -->
+                <ImageView fx:id="dealerImageView"
+                           fitWidth="150"
+                           fitHeight="150"
+                           preserveRatio="true"
+                           smooth="false"/>
+                
+                <!-- Cartas del Dealer (ocultas por defecto) -->
+                <HBox fx:id="cartasDealerBox"
+                      alignment="CENTER"
+                      spacing="10"
+                      style="-fx-padding: 10;">
+                </HBox>
+                
+            </VBox>
+        </top>
+
+        <!-- ============= ZONA INFERIOR: JUGADOR ============= -->
+        <bottom>
+            <VBox alignment="CENTER" spacing="10" 
+                  style="-fx-padding: 10 20 20 20;">
+                
+                <!-- Cartas del Jugador -->
+                <HBox fx:id="cartasJugadorBox"
+                      alignment="CENTER"
+                      spacing="15"
+                      style="-fx-padding: 10;">
+                </HBox>
+                
+                <!-- Barra de vida del Jugador -->
+                <ImageView fx:id="vidaJugadorImageView"
+                           fitWidth="200"
+                           fitHeight="30"
+                           preserveRatio="true"
+                           smooth="false"/>
+                
+            </VBox>
+        </bottom>
+
+        <!-- ============= BOTONES DE ACCIÓN (esquina inferior derecha) ============= -->
+        <right>
+            <VBox alignment="BOTTOM_RIGHT" spacing="15"
+                  style="-fx-padding: 0 30 30 0;">
+                
+                <!-- Botón superior (Cambiar/Pedir) -->
+                <ImageView fx:id="botonSuperiorImageView"
+                           fitWidth="120"
+                           fitHeight="60"
+                           preserveRatio="true"
+                           smooth="false"
+                           onMouseClicked="#onBotonSuperiorClicked"
+                           style="-fx-cursor: hand;"/>
+                
+                <!-- Botón inferior (Plantarse) -->
+                <ImageView fx:id="botonInferiorImageView"
+                           fitWidth="120"
+                           fitHeight="60"
+                           preserveRatio="true"
+                           smooth="false"
+                           onMouseClicked="#onBotonInferiorClicked"
+                           style="-fx-cursor: hand;"/>
+                
+            </VBox>
+        </right>
+
+    </BorderPane>
+
+</StackPane>

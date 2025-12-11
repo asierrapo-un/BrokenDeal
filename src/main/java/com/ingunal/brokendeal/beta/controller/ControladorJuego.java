@@ -4,8 +4,6 @@
  */
 package com.ingunal.brokendeal.beta.controller;
 
-import com.ingunal.brokendeal.beta.controller.ControladorCartas;
-import com.ingunal.brokendeal.beta.controller.ControladorDialogo;
 import com.ingunal.brokendeal.beta.model.vo.personajes.Dealer;
 import com.ingunal.brokendeal.beta.model.vo.trucos.Truco;
 import com.ingunal.brokendeal.beta.model.vo.trucos.PastillaTruco;

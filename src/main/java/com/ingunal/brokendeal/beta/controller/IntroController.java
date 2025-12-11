@@ -159,7 +159,7 @@ public class IntroController {
             stopMusicWithFade(() -> {
                     System.out.println("Cambiando a vista de seleccionar 'as bajo la manga' ");
                     System.out.println("El tipo de juego es " + game);
-                    sceneManager.mostrarAsBajoManga();
+                    sceneManager.mostrarAsBajoManga(game);
             });
 
             return;

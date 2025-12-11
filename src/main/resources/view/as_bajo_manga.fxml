@@ -11,14 +11,13 @@
     <!-- Texto superior -->
     <top>
         <VBox alignment="CENTER" spacing="20" 
-              style="-fx-padding: 40 20 20 20;">
+              style="-fx-padding: 100 20 10 20;">
             <Label fx:id="tituloLabel"
                    text="Selecciona una carta"
                    alignment="CENTER"
-                   style="-fx-text-fill: #00ff00; 
-                          -fx-font-size: 24px; 
-                          -fx-font-weight: bold;
-                          -fx-effect: dropshadow(gaussian, #00ff00, 10, 0.5, 0, 0);"
+                   style="-fx-text-fill: white; 
+                          -fx-font-size: 16px; 
+                          -fx-font-weight: bold;"
                    BorderPane.alignment="CENTER"/>
         </VBox>
     </top>
@@ -36,8 +35,8 @@
 
     <!-- Texto para continuar -->
     <bottom>
-        <VBox alignment="CENTER" spacing="10" 
-              style="-fx-padding: 20 20 40 20;">
+        <VBox alignment="CENTER" spacing="5" 
+              style="-fx-padding: 0 20 40 20;">
             <Label fx:id="clickLabel"
                    text="Haz clic en cualquier lugar para continuar"
                    alignment="CENTER"

@@ -12,206 +12,197 @@ import com.ingunal.brokendeal.beta.model.vo.trucos.AzBajoMangaTruco;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import javafx.geometry.Insets;
+import javafx.scene.Cursor;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
 /**
  *
  * @author andre
  */
 public class AsBajoMangaController {
+
     @FXML private Label tituloLabel;
     @FXML private HBox cartasBox;
     @FXML private Label clickLabel;
-    
+
     private SceneManager sceneManager;
     private Jugador jugador;
     private Baraja baraja;
-    
-    private Carta cartaSeleccionada;
-    private List<Carta> cartasDisponibles; // 5 cartas aleatorias
-    
-    // Referencias visuales
-    private List<VBox> cartasVisual;
+
+    private List<Carta> cartasDisponibles;
     private int indiceSeleccionado = -1;
+    private Carta cartaSeleccionada;
 
-    /**
-     * Configura las dependencias necesarias
-     */
-    public void setSceneManager(SceneManager sm) {
-        this.sceneManager = sm;
-    }
+    private List<StackPane> cartasVisuales = new ArrayList<>();
     
-    public void setJugador(Jugador j) {
-        this.jugador = j;
-    }
+    protected String typeGame;
     
-    public void setBaraja(Baraja b) {
-        this.baraja = b;
-    }
 
-    /**
-     * Inicializa la vista: selecciona 5 cartas aleatorias y las muestra
-     */
-    public void inicializar() {
-        // Seleccionar 5 cartas aleatorias de la baraja
+    // ------------------ Inyección ------------------ //
+
+    public void setSceneManager(SceneManager sm) { this.sceneManager = sm; }
+    public void setJugador(Jugador j) { this.jugador = j; }
+    public void setBaraja(Baraja b) { this.baraja = b; }
+
+    // ------------------ Inicialización ------------------ //
+
+    public void inicializar(String game) {
+
+        aplicarFuentePixelada();
+
         cartasDisponibles = seleccionarCartasAleatorias(5);
-        
-        if (cartasDisponibles.size() != 5) {
-            System.err.println("ERROR: No se pudieron seleccionar 5 cartas de la baraja");
-            return;
-        }
-        
-        // Crear las visualizaciones de las cartas
-        cartasVisual = new ArrayList<>();
         mostrarCartas();
         
-        // Animación del texto "haz clic para continuar"
-        FadeTransition fade = new FadeTransition(Duration.seconds(1.2), clickLabel);
-        fade.setFromValue(0.3);
-        fade.setToValue(1.0);
-        fade.setCycleCount(FadeTransition.INDEFINITE);
-        fade.setAutoReverse(true);
-        fade.play();
-        
-        // Inicialmente ocultar el texto de continuar
+        typeGame = game;
+
+        aplicarAnimacionClickLabel();
         clickLabel.setVisible(false);
     }
 
-    /**
-     * Selecciona N cartas aleatorias de la baraja (sin eliminarlas)
-     */
-    private List<Carta> seleccionarCartasAleatorias(int cantidad) {
-        List<Carta> cartasBaraja = new ArrayList<>(baraja.getCartas());
-        Collections.shuffle(cartasBaraja);
-        
-        List<Carta> seleccionadas = new ArrayList<>();
-        for (int i = 0; i < Math.min(cantidad, cartasBaraja.size()); i++) {
-            seleccionadas.add(cartasBaraja.get(i));
+    // ------------------ Fuente pixel ------------------ //
+
+    private void aplicarFuentePixelada() {
+        try {
+            Font fontPixel = Font.loadFont(
+                    Objects.requireNonNull(getClass().getResourceAsStream("/fuentes/PixerLetters.ttf")),
+                    32
+            );
+            tituloLabel.setFont(fontPixel);
+            clickLabel.setFont(fontPixel);
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar la fuente pixelada.");
         }
-        
-        return seleccionadas;
     }
 
-    /**
-     * Muestra las 5 cartas en el HBox
-     */
+    // ------------------ Selección aleatoria ------------------ //
+
+    private List<Carta> seleccionarCartasAleatorias(int cantidad) {
+        List<Carta> copia = new ArrayList<>(baraja.getCartas());
+        Collections.shuffle(copia);
+        return copia.subList(0, cantidad);
+    }
+
+    // ------------------ Mostrar cartas ------------------ //
+
     private void mostrarCartas() {
         cartasBox.getChildren().clear();
-        
+        cartasVisuales.clear();
+
         for (int i = 0; i < cartasDisponibles.size(); i++) {
             Carta carta = cartasDisponibles.get(i);
-            
-            // Crear contenedor para cada carta
-            VBox contenedor = new VBox(10);
-            contenedor.setAlignment(Pos.CENTER);
-            contenedor.setStyle("-fx-background-color: rgba(255, 255, 255, 0.1); " +
-                                "-fx-border-color: white; " +
-                                "-fx-border-width: 2; " +
-                                "-fx-padding: 15; " +
-                                "-fx-cursor: hand;");
-            
-            // Cargar imagen de la carta
-            ImageView imgView = new ImageView();
-            try {
-                String ruta = "/" + carta.getImgRuta();
-                Image img = new Image(Objects.requireNonNull(
-                    getClass().getResourceAsStream(ruta)
-                ));
-                imgView.setImage(img);
-                imgView.setFitWidth(120);
-                imgView.setFitHeight(180);
-                imgView.setPreserveRatio(true);
-                imgView.setSmooth(false); // Pixel art
-            } catch (Exception e) {
-                System.err.println("Error cargando imagen: " + carta.getImgRuta());
-            }
-            
-            // Label con el nombre
-            //Label nombre = new Label(obtenerNombreCarta(carta));
-            //nombre.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
-            
-            contenedor.getChildren().addAll(imgView);
-            
-            // Guardar referencia
-            cartasVisual.add(contenedor);
-            
-            // Evento de clic
-            final int indice = i;
-            contenedor.setOnMouseClicked(e -> seleccionarCarta(indice));
-            
-            // Hover effect
-            contenedor.setOnMouseEntered(e -> {
-                if (indiceSeleccionado != indice) {
-                    contenedor.setStyle("-fx-background-color: rgba(255, 255, 255, 0.2); " +
-                                      "-fx-border-color: yellow; " +
-                                      "-fx-border-width: 3; " +
-                                      "-fx-padding: 15; " +
-                                      "-fx-cursor: hand;");
-                }
-            });
-            
-            contenedor.setOnMouseExited(e -> {
-                if (indiceSeleccionado != indice) {
-                    contenedor.setStyle("-fx-background-color: rgba(255, 255, 255, 0.1); " +
-                                      "-fx-border-color: white; " +
-                                      "-fx-border-width: 2; " +
-                                      "-fx-padding: 15; " +
-                                      "-fx-cursor: hand;");
-                }
-            });
-            
-            cartasBox.getChildren().add(contenedor);
+
+            Image img = cargarImagen(carta.getImgRuta());
+
+            ImageView imgView = new ImageView(img);
+            imgView.setFitWidth(140);
+            imgView.setPreserveRatio(true);
+            imgView.setSmooth(false);
+
+            StackPane cont = new StackPane(imgView);
+            cont.setStyle(bordeNormal());
+            cont.setPadding(new Insets(10));
+            cont.setCursor(Cursor.HAND);
+
+            final int idx = i;
+            cont.setOnMouseClicked(e -> seleccionarCarta(idx));
+            cont.setOnMouseEntered(e -> aplicarHover(cont, idx));
+            cont.setOnMouseExited(e -> quitarHover(cont, idx));
+
+            cartasVisuales.add(cont);
+            cartasBox.getChildren().add(cont);
         }
     }
 
-    /**
-     * Maneja la selección de una carta
-     */
-    private void seleccionarCarta(int indice) {
-        // Desmarcar la anterior
-        if (indiceSeleccionado >= 0) {
-            VBox anterior = cartasVisual.get(indiceSeleccionado);
-            anterior.setStyle("-fx-background-color: rgba(255, 255, 255, 0.1); " +
-                            "-fx-border-color: white; " +
-                            "-fx-border-width: 2; " +
-                            "-fx-padding: 15; " +
-                            "-fx-cursor: hand;");
+    private Image cargarImagen(String ruta) {
+        try {
+            return new Image(
+                Objects.requireNonNull(
+                        getClass().getResourceAsStream("/" + ruta)
+                ),
+                0, 0, true, false
+            );
+        } catch (Exception e) {
+            System.err.println("Error cargando imagen: " + ruta);
+            return null;
         }
-        
-        // Marcar la nueva
+    }
+
+    // ------------------ Estilos ------------------ //
+
+    private String bordeNormal() {
+        return "-fx-border-color: white; -fx-border-width: 0;";
+    }
+
+    private String bordeHover() {
+        return "-fx-border-color: yellow; -fx-border-width: 1;";
+    }
+
+    private String bordeSeleccionado() {
+        return "-fx-border-color: white; -fx-border-width: 1;";
+    }
+
+    private void aplicarHover(StackPane cont, int idx) {
+        if (idx != indiceSeleccionado)
+            cont.setStyle(bordeHover());
+    }
+
+    private void quitarHover(StackPane cont, int idx) {
+        if (idx != indiceSeleccionado)
+            cont.setStyle(bordeNormal());
+    }
+
+    // ------------------ Selección ------------------ //
+
+    private void seleccionarCarta(int indice) {
+
+        // Desmarcar anterior
+        if (indiceSeleccionado >= 0) {
+            cartasVisuales.get(indiceSeleccionado).setStyle(bordeNormal());
+        }
+
         indiceSeleccionado = indice;
         cartaSeleccionada = cartasDisponibles.get(indice);
-        
-        VBox seleccionado = cartasVisual.get(indice);
-        seleccionado.setStyle("-fx-background-color: rgba(100, 255, 100, 0.3); " +
-                            "-fx-border-color: lime; " +
-                            "-fx-border-width: 4; " +
-                            "-fx-padding: 15; " +
-                            "-fx-cursor: hand;");
-        
-        // Mostrar texto de continuar
+
+        StackPane cont = cartasVisuales.get(indice);
+        cont.setStyle(bordeSeleccionado());
+
         clickLabel.setVisible(true);
-        tituloLabel.setText("Carta seleccionada: " + obtenerNombreCarta(cartaSeleccionada));
-        
-        // Permitir clic en cualquier parte para continuar
+        tituloLabel.setText("Carta seleccionada");
+
+        // Fade-out suave
+        FadeTransition fade = new FadeTransition(Duration.seconds(0.8), cont);
+        fade.setToValue(0.15);
+        fade.play();
+
         clickLabel.getScene().setOnMouseClicked(this::continuarAlJuego);
     }
 
-    /**
-     * Continúa al juego después de seleccionar la carta
-     */
+    // ------------------ Animación del texto inferior ------------------ //
+
+    private void aplicarAnimacionClickLabel() {
+        FadeTransition ft = new FadeTransition(Duration.seconds(1.2), clickLabel);
+        ft.setFromValue(0.4);
+        ft.setToValue(1.0);
+        ft.setCycleCount(FadeTransition.INDEFINITE);
+        ft.setAutoReverse(true);
+        ft.play();
+    }
+
+    // ------------------ Continuar al juego ------------------ //
+
     private void continuarAlJuego(MouseEvent event) {
         if (cartaSeleccionada == null) return;
         
@@ -223,26 +214,17 @@ public class AsBajoMangaController {
                 // Asignar la carta usando el setter
                 azTruco.setCartaGuardada(cartaSeleccionada);
                 
-                System.out.println("✓ As Bajo la Manga configurado: " + obtenerNombreCarta(cartaSeleccionada));
+                System.out.println("✓ As Bajo la Manga configurado: " + 
+                                 obtenerNombreCarta(cartaSeleccionada));
                 
                 break;
             }
         }
         
-        // NO eliminamos la carta de la baraja (puede aparecer en el juego)
-        
-        // Ir al juego correspondiente
-        String tipoJuego = sceneManager.getTipoJuego();
-        if (tipoJuego.equals("poker")) {
-            sceneManager.mostrarPoker();
-        } else {
-            sceneManager.mostrarBlackjack();
-        }
+        System.out.println("Cargando vista del juego...");
+        sceneManager.mostrarVistaJuego(typeGame);
     }
-
-    /**
-     * Obtiene el nombre legible de una carta
-     */
+    
     private String obtenerNombreCarta(Carta carta) {
         String palo = obtenerNombrePalo(carta.getSimbolo());
         String valor = String.valueOf(carta.getValor());
