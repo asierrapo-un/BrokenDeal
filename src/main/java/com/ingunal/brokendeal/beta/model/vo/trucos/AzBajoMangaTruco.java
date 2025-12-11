@@ -41,15 +41,24 @@ public class AzBajoMangaTruco extends Truco {
             return false;
         }
 
+        // NUEVA MECÁNICA: Si el dealer tiene la misma carta, el jugador es descubierto automáticamente
+        if (dealerTieneMismaCarta(juego.getDealer())) {
+            System.out.println("→ ¡El Dealer tiene la misma carta! Fuiste descubierto.");
+            jugador.perderVida(5); // Castigo mayor por ser descubierto
+            usosRestantes = 0;
+            jugador.resetIndiceCartaSeleccionada();
+            return false;
+        }
+
         // Recalcular probabilidad según vida
         recalcularProbabilidad(jugador);
 
         boolean descubierto = Math.random() < probabilidadDescubierto;
 
         if (descubierto) {
-            jugador.perderVida(1);          // castigo por ser atrapado
+            jugador.perderVida(1); // castigo por ser atrapado
             usosRestantes = 0;
-            jugador.resetIndiceCartaSeleccionada(); // seguridad
+            jugador.resetIndiceCartaSeleccionada();
             return false;
         }
 
@@ -65,7 +74,7 @@ public class AzBajoMangaTruco extends Truco {
 
         usosRestantes--;
 
-        jugador.resetIndiceCartaSeleccionada(); // siempre limpiar
+        jugador.resetIndiceCartaSeleccionada();
 
         return true;
     }
@@ -86,5 +95,19 @@ public class AzBajoMangaTruco extends Truco {
         if (vida >= 60)       probabilidadDescubierto = 0.50;
         else if (vida >= 30)  probabilidadDescubierto = 0.60;
         else                  probabilidadDescubierto = 0.75;
+    }
+    
+    /**
+     * Verifica si el Dealer tiene la misma carta en su mano
+     */
+    private boolean dealerTieneMismaCarta(com.ingunal.brokendeal.beta.model.vo.personajes.Dealer dealer) {
+        for (Carta cartaDealer : dealer.getMano().getCartas()) {
+            // Comparar por valor y palo
+            if (cartaDealer.getValor() == cartaGuardada.getValor() &&
+                cartaDealer.getSimbolo().equals(cartaGuardada.getSimbolo())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

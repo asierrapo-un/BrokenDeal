@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.ingunal.brokendeal.beta.controller.AsBajoMangaController"
-            style="-fx-background-color: black;">
+            style="-fx-background-color: #0a0a0a;">
 
     <!-- Texto superior -->
     <top>
-        <Label fx:id="tituloLabel"
-               text="Selecciona una carta"
-               alignment="CENTER"
-               style="-fx-text-fill: white; -fx-font-size: 18px;"
-               BorderPane.alignment="CENTER"/>
+        <VBox alignment="CENTER" spacing="20" 
+              style="-fx-padding: 40 20 20 20;">
+            <Label fx:id="tituloLabel"
+                   text="Selecciona una carta"
+                   alignment="CENTER"
+                   style="-fx-text-fill: #00ff00; 
+                          -fx-font-size: 24px; 
+                          -fx-font-weight: bold;
+                          -fx-effect: dropshadow(gaussian, #00ff00, 10, 0.5, 0, 0);"
+                   BorderPane.alignment="CENTER"/>
+        </VBox>
     </top>
 
-    <!-- Cartas -->
+    <!-- Cartas en el centro -->
     <center>
-        <HBox fx:id="cartasBox"
-              alignment="CENTER"
-              spacing="20"
-              padding="20">
-        </HBox>
+        <VBox alignment="CENTER" spacing="20">
+            <HBox fx:id="cartasBox"
+                  alignment="CENTER"
+                  spacing="20"
+                  style="-fx-padding: 20;">
+            </HBox>
+        </VBox>
     </center>
 
-    <!-- Click para continuar -->
+    <!-- Texto para continuar -->
     <bottom>
-        <Label fx:id="clickLabel"
-               text="Haz clic para continuar"
-               alignment="CENTER"
-               style="-fx-text-fill: white; -fx-font-size: 18px;"
-               BorderPane.alignment="CENTER"/>
+        <VBox alignment="CENTER" spacing="10" 
+              style="-fx-padding: 20 20 40 20;">
+            <Label fx:id="clickLabel"
+                   text="Haz clic en cualquier lugar para continuar"
+                   alignment="CENTER"
+                   style="-fx-text-fill: white; 
+                          -fx-font-size: 16px;
+                          -fx-opacity: 0.8;"
+                   BorderPane.alignment="CENTER"/>
+        </VBox>
     </bottom>
 
 </BorderPane>

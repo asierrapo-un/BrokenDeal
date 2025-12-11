@@ -158,7 +158,7 @@ public class SceneManager {
             controller.setSceneManager(this);
             controller.setJugador(jugador);
             controller.setBaraja(baraja);
-            controller.inicializar(); // Cargar las 4 cartas As
+            controller.inicializar(); // Cargar 5 cartas aleatorias
         }
     }
 

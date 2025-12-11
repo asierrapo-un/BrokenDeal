@@ -22,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +31,6 @@ import java.util.Objects;
  * @author andre
  */
 public class AsBajoMangaController {
-    
     @FXML private Label tituloLabel;
     @FXML private HBox cartasBox;
     @FXML private Label clickLabel;
@@ -40,7 +40,7 @@ public class AsBajoMangaController {
     private Baraja baraja;
     
     private Carta cartaSeleccionada;
-    private List<Carta> ases;
+    private List<Carta> cartasDisponibles; // 5 cartas aleatorias
     
     // Referencias visuales
     private List<VBox> cartasVisual;
@@ -62,14 +62,14 @@ public class AsBajoMangaController {
     }
 
     /**
-     * Inicializa la vista: busca los 4 ases y los muestra
+     * Inicializa la vista: selecciona 5 cartas aleatorias y las muestra
      */
     public void inicializar() {
-        // Buscar los 4 ases en la baraja
-        ases = buscarAses();
+        // Seleccionar 5 cartas aleatorias de la baraja
+        cartasDisponibles = seleccionarCartasAleatorias(5);
         
-        if (ases.size() != 4) {
-            System.err.println("ERROR: No se encontraron los 4 ases en la baraja");
+        if (cartasDisponibles.size() != 5) {
+            System.err.println("ERROR: No se pudieron seleccionar 5 cartas de la baraja");
             return;
         }
         
@@ -90,29 +90,28 @@ public class AsBajoMangaController {
     }
 
     /**
-     * Busca las 4 cartas As (A) en la baraja
+     * Selecciona N cartas aleatorias de la baraja (sin eliminarlas)
      */
-    private List<Carta> buscarAses() {
-        List<Carta> asesList = new ArrayList<>();
+    private List<Carta> seleccionarCartasAleatorias(int cantidad) {
+        List<Carta> cartasBaraja = new ArrayList<>(baraja.getCartas());
+        Collections.shuffle(cartasBaraja);
         
-        for (Carta carta : baraja.getCartas()) {
-            if (carta.getValor() == 'A') {
-                asesList.add(carta);
-                if (asesList.size() == 4) break; // Ya tenemos los 4
-            }
+        List<Carta> seleccionadas = new ArrayList<>();
+        for (int i = 0; i < Math.min(cantidad, cartasBaraja.size()); i++) {
+            seleccionadas.add(cartasBaraja.get(i));
         }
         
-        return asesList;
+        return seleccionadas;
     }
 
     /**
-     * Muestra las 4 cartas en el HBox
+     * Muestra las 5 cartas en el HBox
      */
     private void mostrarCartas() {
         cartasBox.getChildren().clear();
         
-        for (int i = 0; i < ases.size(); i++) {
-            Carta carta = ases.get(i);
+        for (int i = 0; i < cartasDisponibles.size(); i++) {
+            Carta carta = cartasDisponibles.get(i);
             
             // Crear contenedor para cada carta
             VBox contenedor = new VBox(10);
@@ -140,7 +139,7 @@ public class AsBajoMangaController {
             }
             
             // Label con el nombre
-            Label nombre = new Label("As de " + obtenerNombrePalo(carta.getSimbolo()));
+            Label nombre = new Label(obtenerNombreCarta(carta));
             nombre.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
             
             contenedor.getChildren().addAll(imgView, nombre);
@@ -193,7 +192,7 @@ public class AsBajoMangaController {
         
         // Marcar la nueva
         indiceSeleccionado = indice;
-        cartaSeleccionada = ases.get(indice);
+        cartaSeleccionada = cartasDisponibles.get(indice);
         
         VBox seleccionado = cartasVisual.get(indice);
         seleccionado.setStyle("-fx-background-color: rgba(100, 255, 100, 0.3); " +
@@ -204,15 +203,14 @@ public class AsBajoMangaController {
         
         // Mostrar texto de continuar
         clickLabel.setVisible(true);
-        tituloLabel.setText("Carta seleccionada: As de " + 
-                           obtenerNombrePalo(cartaSeleccionada.getSimbolo()));
+        tituloLabel.setText("Carta seleccionada: " + obtenerNombreCarta(cartaSeleccionada));
         
         // Permitir clic en cualquier parte para continuar
         clickLabel.getScene().setOnMouseClicked(this::continuarAlJuego);
     }
 
     /**
-     * Continúa al juego después de seleccionar el As
+     * Continúa al juego después de seleccionar la carta
      */
     private void continuarAlJuego(MouseEvent event) {
         if (cartaSeleccionada == null) return;
@@ -226,15 +224,13 @@ public class AsBajoMangaController {
                 azTruco.setCartaGuardada(cartaSeleccionada);
                 
                 System.out.println("✓ As Bajo la Manga configurado: " + 
-                                 cartaSeleccionada.getValor() + 
-                                 " de " + cartaSeleccionada.getSimbolo());
+                                 obtenerNombreCarta(cartaSeleccionada));
                 
                 break;
             }
         }
         
-        // Eliminar el As de la baraja (ya no estará disponible para repartir)
-        baraja.eliminarCarta(cartaSeleccionada);
+        // NO eliminamos la carta de la baraja (puede aparecer en el juego)
         
         // Ir al juego correspondiente
         String tipoJuego = sceneManager.getTipoJuego();
@@ -243,6 +239,24 @@ public class AsBajoMangaController {
         } else {
             sceneManager.mostrarBlackjack();
         }
+    }
+
+    /**
+     * Obtiene el nombre legible de una carta
+     */
+    private String obtenerNombreCarta(Carta carta) {
+        String palo = obtenerNombrePalo(carta.getSimbolo());
+        String valor = String.valueOf(carta.getValor());
+        
+        // Traducir valores especiales
+        switch (carta.getValor()) {
+            case 'A': valor = "As"; break;
+            case 'J': valor = "Jota"; break;
+            case 'Q': valor = "Reina"; break;
+            case 'K': valor = "Rey"; break;
+        }
+        
+        return valor + " de " + palo;
     }
 
     /**
