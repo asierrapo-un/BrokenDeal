@@ -2,13 +2,16 @@ package com.ingunal.brokendeal.beta.controller;
 
 import com.ingunal.brokendeal.beta.SceneManager;
 import com.ingunal.brokendeal.beta.model.vo.Carta;
+import com.ingunal.brokendeal.beta.model.vo.juego.EstadoJuego;
 import com.ingunal.brokendeal.beta.model.vo.personajes.Dealer;
 import com.ingunal.brokendeal.beta.model.vo.personajes.Jugador;
 
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +69,9 @@ public class JuegoViewController {
         // Mostrar cartas iniciales
         mostrarCartasJugador();
         mostrarCartasDealer();
+        
+        // Aplicar oscurecimiento inicial si no es turno del jugador
+        aplicarEfectoTurno();
     }
     
     // ========== ACTUALIZACIÓN DE ELEMENTOS DINÁMICOS ==========
@@ -93,21 +99,34 @@ public class JuegoViewController {
     }
     
     /**
-     * Actualiza las barras de vida del jugador y dealer
+     * Actualiza las barras de vida del jugador y dealer.
+     * AJUSTE: Redondea al múltiplo de 2 más cercano hacia ARRIBA.
      */
     private void actualizarBarraVida() {
         Jugador jugador = controladorJuego.getJuego().getJugador();
         Dealer dealer = controladorJuego.getJuego().getDealer();
         
-        // Calcular estado de la barra (cada 2 puntos de vida)
-        int estadoVidaJugador = jugador.getVida() / 2; // 0-50
-        int estadoVidaDealer = dealer.getVida() / 2;   // 0-50
+        // Redondear al múltiplo de 2 más cercano hacia arriba
+        int estadoVidaJugador = redondearHaciaArribaDivisor2(jugador.getVida());
+        int estadoVidaDealer = redondearHaciaArribaDivisor2(dealer.getVida());
         
         String rutaVidaJugador = "/img/Vida/Jugador/player_health-bar_" + estadoVidaJugador + ".png";
         String rutaVidaDealer = "/img/Vida/Dealer/boss_health-bar_" + estadoVidaDealer + ".png";
         
         cargarImagen(vidaJugadorImageView, rutaVidaJugador);
         cargarImagen(vidaDealerImageView, rutaVidaDealer);
+    }
+    
+    /**
+     * Redondea un valor al múltiplo de 2 más cercano hacia ARRIBA.
+     * Ejemplo: 55 -> 56, 54 -> 54, 57 -> 58
+     */
+    private int redondearHaciaArribaDivisor2(int valor) {
+        if (valor % 2 == 0) {
+            return valor; // Ya es par
+        } else {
+            return valor + 1; // Redondear hacia arriba
+        }
     }
     
     /**
@@ -132,7 +151,7 @@ public class JuegoViewController {
         List<Carta> cartas = controladorJuego.getJuego().getJugador().getMano().getCartas();
         
         for (Carta carta : cartas) {
-            ImageView cartaView = crearCartaView(carta);
+            ImageView cartaView = crearCartaView(carta, "jugador");
             cartasJugadorVisual.add(cartaView);
             cartasJugadorBox.getChildren().add(cartaView);
         }
@@ -149,7 +168,7 @@ public class JuegoViewController {
         boolean mostrarCartas = controladorJuego.getJuego().getRondasVision() > 0;
         
         for (Carta carta : cartas) {
-            ImageView cartaView = crearCartaView(carta);
+            ImageView cartaView = crearCartaView(carta, "dealer");
             
             // Ocultar cartas si no hay visión activa
             if (!mostrarCartas) {
@@ -164,14 +183,19 @@ public class JuegoViewController {
     /**
      * Crea un ImageView para una carta
      */
-    private ImageView crearCartaView(Carta carta) {
+    private ImageView crearCartaView(Carta carta, String personaje) {
         ImageView imgView = new ImageView();
         
         String ruta = "/" + carta.getImgRuta();
         cargarImagen(imgView, ruta);
         
-        imgView.setFitWidth(80);
-        imgView.setFitHeight(120);
+        if(personaje=="dealer"){
+            imgView.setFitWidth(50);  // Ajusta aquí el ancho de las cartas del dealer
+            imgView.setFitHeight(80); // Ajusta aquí el alto de las cartas del dealer
+        } else {
+            imgView.setFitWidth(90);  // Ajusta aquí el ancho de las cartas del jugador
+            imgView.setFitHeight(150); // Ajusta aquí el alto de las cartas del jugador
+        }
         imgView.setPreserveRatio(true);
         imgView.setSmooth(false); // Pixel art
         
@@ -184,6 +208,43 @@ public class JuegoViewController {
     public void toggleVisibilidadCartasDealer(boolean visible) {
         for (ImageView cartaView : cartasDealerVisual) {
             cartaView.setVisible(visible);
+        }
+    }
+    
+    /**
+     * Aplica efecto de oscurecimiento a las cartas del jugador cuando NO es su turno
+     */
+    private void aplicarEfectoTurno() {
+        EstadoJuego estado = controladorJuego.getJuego().getEstado();
+        
+        if (estado == EstadoJuego.TURNO_JUGADOR) {
+            // Es turno del jugador: cartas normales
+            restaurarBrilloCartas();
+        } else {
+            // No es turno del jugador: oscurecer cartas
+            oscurecerCartasJugador();
+        }
+    }
+    
+    /**
+     * Oscurece las cartas del jugador con una animación suave
+     */
+    private void oscurecerCartasJugador() {
+        for (ImageView cartaView : cartasJugadorVisual) {
+            FadeTransition fade = new FadeTransition(Duration.seconds(0.5), cartaView);
+            fade.setToValue(0.4); // Opacidad reducida
+            fade.play();
+        }
+    }
+    
+    /**
+     * Restaura el brillo normal de las cartas del jugador
+     */
+    private void restaurarBrilloCartas() {
+        for (ImageView cartaView : cartasJugadorVisual) {
+            FadeTransition fade = new FadeTransition(Duration.seconds(0.5), cartaView);
+            fade.setToValue(1.0); // Opacidad completa
+            fade.play();
         }
     }
     
@@ -238,6 +299,7 @@ public class JuegoViewController {
         actualizarBarraVida();
         mostrarCartasJugador();
         mostrarCartasDealer();
+        aplicarEfectoTurno(); // NUEVO: Actualizar efecto de turno
     }
     
     // ========== UTILIDAD: CARGA DE IMÁGENES ==========

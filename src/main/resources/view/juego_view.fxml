@@ -21,27 +21,27 @@
         <!-- ============= ZONA SUPERIOR: DEALER ============= -->
         <top>
             <VBox alignment="CENTER" spacing="10" 
-                  style="-fx-padding: 20 20 10 20;">
+                  style="-fx-padding: 10 20 0 20;">
                 
-                <!-- Barra de vida del Dealer -->
                 <ImageView fx:id="vidaDealerImageView"
-                           fitWidth="200"
+                           fitWidth="1024"
+                           preserveRatio="false"
                            fitHeight="30"
-                           preserveRatio="true"
                            smooth="false"/>
+                <!-- Ajustar fitHeight aquí para cambiar la altura vertical de la barra -->
                 
-                <!-- GIF del Dealer (cambia según vida del jugador) -->
                 <ImageView fx:id="dealerImageView"
-                           fitWidth="150"
-                           fitHeight="150"
+                           fitWidth="400"
+                           fitHeight="200"
                            preserveRatio="true"
                            smooth="false"/>
+                <!-- Ajustar fitWidth/fitHeight aquí para cambiar el tamaño del dealer -->
                 
                 <!-- Cartas del Dealer (ocultas por defecto) -->
                 <HBox fx:id="cartasDealerBox"
                       alignment="CENTER"
-                      spacing="10"
-                      style="-fx-padding: 10;">
+                      spacing="5"
+                      style="-fx-padding: 10;" >
                 </HBox>
                 
             </VBox>
@@ -50,47 +50,53 @@
         <!-- ============= ZONA INFERIOR: JUGADOR ============= -->
         <bottom>
             <VBox alignment="CENTER" spacing="10" 
-                  style="-fx-padding: 10 20 20 20;">
+                  style="-fx-padding: 0 20 10 20;">
                 
                 <!-- Cartas del Jugador -->
                 <HBox fx:id="cartasJugadorBox"
                       alignment="CENTER"
-                      spacing="15"
+                      spacing="5"
                       style="-fx-padding: 10;">
                 </HBox>
                 
-                <!-- Barra de vida del Jugador -->
+                <!-- AJUSTE: Barra de vida del Jugador más grande y de lado a lado -->
                 <ImageView fx:id="vidaJugadorImageView"
-                           fitWidth="200"
+                           fitWidth="1024"
+                           preserveRatio="false"
                            fitHeight="30"
-                           preserveRatio="true"
                            smooth="false"/>
+                <!-- Ajustar fitHeight aquí para cambiar la altura vertical de la barra -->
                 
             </VBox>
         </bottom>
 
         <!-- ============= BOTONES DE ACCIÓN (esquina inferior derecha) ============= -->
         <right>
+            <!-- AJUSTE: Posición más pegada a la esquina inferior derecha -->
             <VBox alignment="BOTTOM_RIGHT" spacing="15"
-                  style="-fx-padding: 0 30 30 0;">
+                  style="-fx-padding: 0 45 0 0;">
+                <!-- Ajustar padding aquí: orden es arriba, derecha, abajo, izquierda -->
+                <!-- Valores más pequeños = más cerca de la esquina -->
                 
                 <!-- Botón superior (Cambiar/Pedir) -->
                 <ImageView fx:id="botonSuperiorImageView"
                            fitWidth="120"
-                           fitHeight="60"
+                           fitHeight="50"
                            preserveRatio="true"
                            smooth="false"
                            onMouseClicked="#onBotonSuperiorClicked"
                            style="-fx-cursor: hand;"/>
+                <!-- Ajustar fitWidth/fitHeight aquí para cambiar tamaño de botones -->
                 
                 <!-- Botón inferior (Plantarse) -->
                 <ImageView fx:id="botonInferiorImageView"
                            fitWidth="120"
-                           fitHeight="60"
+                           fitHeight="50"
                            preserveRatio="true"
                            smooth="false"
                            onMouseClicked="#onBotonInferiorClicked"
                            style="-fx-cursor: hand;"/>
+                <!-- Ajustar fitWidth/fitHeight aquí para cambiar tamaño de botones -->
                 
             </VBox>
         </right>
