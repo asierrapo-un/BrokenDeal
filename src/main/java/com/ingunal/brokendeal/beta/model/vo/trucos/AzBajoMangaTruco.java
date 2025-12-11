@@ -24,11 +24,22 @@ public class AzBajoMangaTruco extends Truco {
     public Carta getCartaGuardada() {
         return cartaGuardada;
     }
+    
+    // ← NUEVO: Setter para asignar la carta después
+    public void setCartaGuardada(Carta carta) {
+        this.cartaGuardada = carta;
+    }
 
     @Override
     public boolean activar(Jugador jugador, Juego juego) {
 
         if (usosRestantes <= 0) return false;
+        
+        // Validar que tengamos una carta guardada
+        if (cartaGuardada == null) {
+            System.err.println("ERROR: No hay carta guardada en el truco");
+            return false;
+        }
 
         // Recalcular probabilidad según vida
         recalcularProbabilidad(jugador);

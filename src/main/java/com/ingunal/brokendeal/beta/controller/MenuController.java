@@ -18,11 +18,9 @@ import java.util.Objects;
 import javafx.beans.binding.Bindings;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
 
 /**
- * Controlador para la vista de menú principal.
- * Provee métodos mostrarMenu() y seleccionarOpcion(int).
+ * 
  * @author andre
  */
 public class MenuController {
@@ -33,33 +31,30 @@ public class MenuController {
     @FXML private ImageView btnBlackjack;
     @FXML private ImageView btnQuit;
 
-    // ------------------ Parámetros dinámicos ------------------
-    private DoubleProperty centerSpacing = new SimpleDoubleProperty(20);  // separación entre botones
-    private DoubleProperty bottomOffset = new SimpleDoubleProperty(35);   // separación desde abajo
-    private DoubleProperty centerVerticalOffset = new SimpleDoubleProperty(215); // bajar botones centrales
+    // Parámetros dinámicos
+    private DoubleProperty centerSpacing = new SimpleDoubleProperty(20);
+    private DoubleProperty bottomOffset = new SimpleDoubleProperty(35);
+    private DoubleProperty centerVerticalOffset = new SimpleDoubleProperty(215);
 
-    // ------------------ Rutas de imágenes ------------------
+    // Rutas de imágenes
     private static final String BG_PATH = "/img/Menu/Menu.gif";
     private static final String POKER_PATH = "/img/Menu/Boton_Menu_Poker.png";
     private static final String BJ_PATH = "/img/Menu/Boton_Menu_BlackJack.png";
     private static final String QUIT_PATH = "/img/Menu/Boton_Menu_Salir.png";
     
-    // ------------------ Rutas de audio ------------------
+    // Audio
     private MediaPlayer mediaPlayer;
     private static final String MUSIC_PATH = "/audio/music/Anxiety.mp3";
 
-    
-    // ---------------------------------------------------------
     @FXML
     private void initialize() {
-
-        // === Cargar imágenes ===
+        // Cargar imágenes
         backgroundImage.setImage(loadImage(BG_PATH));
         btnPoker.setImage(loadImage(POKER_PATH));
         btnBlackjack.setImage(loadImage(BJ_PATH));
         btnQuit.setImage(loadImage(QUIT_PATH));
 
-        // === Pixel-Art nítido ===
+        // Pixel-Art nítido
         backgroundImage.setSmooth(false);
         btnPoker.setSmooth(false);
         btnBlackjack.setSmooth(false);
@@ -69,11 +64,11 @@ public class MenuController {
         btnBlackjack.setPreserveRatio(true);
         btnQuit.setPreserveRatio(true);
 
-        // === Fondo responsivo ===
+        // Fondo responsivo
         backgroundImage.fitWidthProperty().bind(root.widthProperty());
         backgroundImage.fitHeightProperty().bind(root.heightProperty());
 
-        // === Escalado dinámico de botones ===
+        // Escalado dinámico de botones
         root.widthProperty().addListener((obs, oldW, newW) ->
                 adjustButtonSizes(newW.doubleValue(), root.getHeight())
         );
@@ -81,26 +76,24 @@ public class MenuController {
                 adjustButtonSizes(root.getWidth(), newH.doubleValue())
         );
 
-        // === Spacing del centro ===
+        // Spacing del centro
         centerBox.spacingProperty().bind(centerSpacing);
 
-        // === Bajar centro ===
+        // Bajar centro
         centerBox.styleProperty().bind(
                 Bindings.concat("-fx-padding: ",
                         centerVerticalOffset.asString(), " 0 0 0;")
         );
 
-        // === Margen inferior del botón Salir ===
+        // Margen inferior del botón Salir
         VBox bottomVBox = (VBox) btnQuit.getParent();
         bottomVBox.styleProperty().bind(
                 Bindings.concat("-fx-padding: 0 0 ", bottomOffset.asString(), " 0;")
         );
         
-        
         iniciarMusica();
     }
 
-    // ---------------------------------------------------------
     private Image loadImage(String resourcePath) {
         try {
             return new Image(Objects.requireNonNull(
@@ -119,7 +112,6 @@ public class MenuController {
         double btnW = base * 0.22;
         double btnH = base * 0.14;
 
-        // Mínimos
         btnPoker.setFitWidth(Math.max(110, btnW));
         btnPoker.setFitHeight(Math.max(50, btnH));
 
@@ -136,28 +128,27 @@ public class MenuController {
     @FXML private void onQuitClicked(Event e)    { seleccionarOpcion(2); }
 
     public void seleccionarOpcion(int opcion) {
-        
         fadeOutMusica(() -> {
             switch (opcion) { 
                 case 0: 
-                    System.out.println("Iniciar Poker..."); 
-                    sceneManager.mostrarIntro("poker");
+                    System.out.println("→ Usuario eligió: Poker"); 
+                    sceneManager.mostrarIntro("poker"); // ← Ahora crea objetos
                     break; 
 
                 case 1: 
-                    System.out.println("Iniciar Blackjack..."); 
-                    sceneManager.mostrarIntro("blackjack");
+                    System.out.println("→ Usuario eligió: Blackjack"); 
+                    sceneManager.mostrarIntro("blackjack"); // ← Ahora crea objetos
                     break; 
 
                 case 2: 
-                    System.out.println("Saliendo..."); 
+                    System.out.println("→ Saliendo del juego..."); 
                     sceneManager.salir(); 
                     break; 
             }
         });
     }
     
-    // ----------------- MÉTODO: cargar y reproducir música -----------------
+    // ----------------- Música -----------------
     private void iniciarMusica() {
         try {
             Media media = new Media(Objects.requireNonNull(
@@ -165,8 +156,8 @@ public class MenuController {
             ).toExternalForm());
 
             mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // loop infinito
-            mediaPlayer.setVolume(0.0); // iniciar en silencio para fade-in
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.setVolume(0.0);
             mediaPlayer.play();
 
             fadeInMusica();
@@ -176,7 +167,6 @@ public class MenuController {
         }
     }
 
-    // ----------------- FADE-IN -----------------
     private void fadeInMusica() {
         if (mediaPlayer == null) return;
 
@@ -191,7 +181,6 @@ public class MenuController {
         }).start();
     }
 
-    // ----------------- FADE-OUT -----------------
     private void fadeOutMusica(Runnable accionDespues) {
         if (mediaPlayer == null) {
             if (accionDespues != null) accionDespues.run();
@@ -215,10 +204,10 @@ public class MenuController {
         }).start();
     }
 
-    // ------------------ Setters de SceneManager / Controlador ------------------
+    // ------------------ Setter de SceneManager ------------------
     private SceneManager sceneManager;
-    private ControladorJuego controladorJuego;
 
-    public void setSceneManager(SceneManager sm) { this.sceneManager = sm; }
-    public void setControladorJuego(ControladorJuego cj) { this.controladorJuego = cj; }
+    public void setSceneManager(SceneManager sm) { 
+        this.sceneManager = sm; 
+    }
 }
