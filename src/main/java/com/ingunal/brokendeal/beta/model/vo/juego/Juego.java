@@ -102,7 +102,7 @@ public abstract class Juego {
 
     // ---------------- MÉTODO ABSTRACTO ---------------- //
 
-    protected abstract Personaje evaluarGanador();
+    public abstract Personaje evaluarGanador();
 
     // ---------------- GETTERS Y SETTERS ---------------- //
     

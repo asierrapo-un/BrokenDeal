@@ -3,14 +3,19 @@ package com.ingunal.brokendeal.beta.controller;
 import com.ingunal.brokendeal.beta.SceneManager;
 import com.ingunal.brokendeal.beta.model.vo.Carta;
 import com.ingunal.brokendeal.beta.model.vo.juego.EstadoJuego;
+import com.ingunal.brokendeal.beta.model.vo.juego.Poker;
+import com.ingunal.brokendeal.beta.model.vo.juego.BlackJack;
 import com.ingunal.brokendeal.beta.model.vo.personajes.Dealer;
 import com.ingunal.brokendeal.beta.model.vo.personajes.Jugador;
+import com.ingunal.brokendeal.beta.model.vo.personajes.Personaje;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -37,10 +42,19 @@ public class JuegoViewController {
     private List<ImageView> cartasJugadorVisual;
     private List<ImageView> cartasDealerVisual;
     
+    // ========== CONTROL DE SELECCIÓN DE CARTAS ==========
+    private List<Integer> cartasSeleccionadas; // Índices de cartas seleccionadas
+    private int cartaSeleccionadaUnica = -1; // Para BlackJack (1 carta)
+    
+    // ========== CONTROL DE TURNOS ==========
+    private boolean jugadorSePlanto = false;
+    private boolean dealerSePlanto = false;
+    
     @FXML
     private void initialize() {
         cartasJugadorVisual = new ArrayList<>();
         cartasDealerVisual = new ArrayList<>();
+        cartasSeleccionadas = new ArrayList<>();
     }
     
     // ========== SETTERS DE DEPENDENCIAS ==========
@@ -72,13 +86,12 @@ public class JuegoViewController {
         
         // Aplicar oscurecimiento inicial si no es turno del jugador
         aplicarEfectoTurno();
+        
+        System.out.println("✓ Vista inicializada - Es turno del jugador");
     }
     
     // ========== ACTUALIZACIÓN DE ELEMENTOS DINÁMICOS ==========
     
-    /**
-     * Actualiza el fondo según la vida del jugador (cada 25 puntos)
-     */
     private void actualizarFondo() {
         int vida = controladorJuego.getJuego().getJugador().getVida();
         int estado = calcularEstado(vida);
@@ -87,9 +100,6 @@ public class JuegoViewController {
         cargarImagen(fondoImageView, rutaFondo);
     }
     
-    /**
-     * Actualiza el GIF del Dealer según la vida del jugador
-     */
     private void actualizarDealerGif() {
         int vida = controladorJuego.getJuego().getJugador().getVida();
         int estado = calcularEstado(vida);
@@ -98,15 +108,10 @@ public class JuegoViewController {
         cargarImagen(dealerImageView, rutaDealer);
     }
     
-    /**
-     * Actualiza las barras de vida del jugador y dealer.
-     * AJUSTE: Redondea al múltiplo de 2 más cercano hacia ARRIBA.
-     */
     private void actualizarBarraVida() {
         Jugador jugador = controladorJuego.getJuego().getJugador();
         Dealer dealer = controladorJuego.getJuego().getDealer();
         
-        // Redondear al múltiplo de 2 más cercano hacia arriba
         int estadoVidaJugador = redondearHaciaArribaDivisor2(jugador.getVida());
         int estadoVidaDealer = redondearHaciaArribaDivisor2(dealer.getVida());
         
@@ -117,21 +122,14 @@ public class JuegoViewController {
         cargarImagen(vidaDealerImageView, rutaVidaDealer);
     }
     
-    /**
-     * Redondea un valor al múltiplo de 2 más cercano hacia ARRIBA.
-     * Ejemplo: 55 -> 56, 54 -> 54, 57 -> 58
-     */
     private int redondearHaciaArribaDivisor2(int valor) {
         if (valor % 2 == 0) {
-            return valor; // Ya es par
+            return valor;
         } else {
-            return valor + 1; // Redondear hacia arriba
+            return valor + 1;
         }
     }
     
-    /**
-     * Calcula el estado (1-4) según la vida (cada 25 puntos)
-     */
     private int calcularEstado(int vida) {
         if (vida > 75) return 1;
         if (vida > 50) return 2;
@@ -141,25 +139,32 @@ public class JuegoViewController {
     
     // ========== GESTIÓN DE CARTAS ==========
     
-    /**
-     * Muestra las cartas del jugador
-     */
     private void mostrarCartasJugador() {
         cartasJugadorBox.getChildren().clear();
         cartasJugadorVisual.clear();
+        cartasSeleccionadas.clear();
+        cartaSeleccionadaUnica = -1;
         
         List<Carta> cartas = controladorJuego.getJuego().getJugador().getMano().getCartas();
         
-        for (Carta carta : cartas) {
+        for (int i = 0; i < cartas.size(); i++) {
+            Carta carta = cartas.get(i);
+            
+            // Crear contenedor para la carta
+            StackPane contenedor = new StackPane();
             ImageView cartaView = crearCartaView(carta, "jugador");
+            contenedor.getChildren().add(cartaView);
+            
+            // Agregar interactividad
+            final int indice = i;
+            contenedor.setOnMouseClicked(e -> seleccionarCarta(indice, contenedor));
+            contenedor.setStyle("-fx-cursor: hand;");
+            
             cartasJugadorVisual.add(cartaView);
-            cartasJugadorBox.getChildren().add(cartaView);
+            cartasJugadorBox.getChildren().add(contenedor);
         }
     }
     
-    /**
-     * Muestra las cartas del dealer (ocultas por defecto)
-     */
     private void mostrarCartasDealer() {
         cartasDealerBox.getChildren().clear();
         cartasDealerVisual.clear();
@@ -170,7 +175,6 @@ public class JuegoViewController {
         for (Carta carta : cartas) {
             ImageView cartaView = crearCartaView(carta, "dealer");
             
-            // Ocultar cartas si no hay visión activa
             if (!mostrarCartas) {
                 cartaView.setVisible(false);
             }
@@ -202,57 +206,95 @@ public class JuegoViewController {
         return imgView;
     }
     
-    /**
-     * Muestra/oculta las cartas del dealer
-     */
+    // ========== SELECCIÓN DE CARTAS ==========
+    
+    private void seleccionarCarta(int indice, StackPane contenedor) {
+        if (controladorJuego.getJuego().getEstado() != EstadoJuego.TURNO_JUGADOR) {
+            System.out.println("No es tu turno");
+            return;
+        }
+        
+        if (tipoJuego.equals("poker")) {
+            seleccionarCartaPoker(indice, contenedor);
+        } else {
+            seleccionarCartaBlackjack(indice, contenedor);
+        }
+    }
+    
+    private void seleccionarCartaPoker(int indice, StackPane contenedor) {
+        if (cartasSeleccionadas.contains(indice)) {
+            // Deseleccionar
+            cartasSeleccionadas.remove(Integer.valueOf(indice));
+            contenedor.setStyle("-fx-cursor: hand; -fx-border-color: transparent;");
+        } else {
+            // Seleccionar (máximo 3)
+            if (cartasSeleccionadas.size() < 3) {
+                cartasSeleccionadas.add(indice);
+                contenedor.setStyle("-fx-cursor: hand; -fx-border-color: yellow; -fx-border-width: 3;");
+            } else {
+                System.out.println("Solo puedes seleccionar máximo 3 cartas");
+            }
+        }
+        
+        System.out.println("Cartas seleccionadas: " + cartasSeleccionadas);
+    }
+    
+    private void seleccionarCartaBlackjack(int indice, StackPane contenedor) {
+        // Limpiar selección anterior
+        if (cartaSeleccionadaUnica >= 0 && cartaSeleccionadaUnica < cartasJugadorBox.getChildren().size()) {
+            StackPane anteriorContenedor = (StackPane) cartasJugadorBox.getChildren().get(cartaSeleccionadaUnica);
+            anteriorContenedor.setStyle("-fx-cursor: hand; -fx-border-color: transparent;");
+        }
+        
+        if (cartaSeleccionadaUnica == indice) {
+            // Deseleccionar
+            cartaSeleccionadaUnica = -1;
+            contenedor.setStyle("-fx-cursor: hand; -fx-border-color: transparent;");
+        } else {
+            // Seleccionar nueva
+            cartaSeleccionadaUnica = indice;
+            contenedor.setStyle("-fx-cursor: hand; -fx-border-color: yellow; -fx-border-width: 3;");
+        }
+        
+        System.out.println("Carta seleccionada (BlackJack): " + cartaSeleccionadaUnica);
+    }
+    
+    // ========== EFECTOS VISUALES ==========
+    
+    private void aplicarEfectoTurno() {
+        EstadoJuego estado = controladorJuego.getJuego().getEstado();
+        
+        if (estado == EstadoJuego.TURNO_JUGADOR) {
+            restaurarBrilloCartas();
+        } else {
+            oscurecerCartasJugador();
+        }
+    }
+    
+    private void oscurecerCartasJugador() {
+        for (ImageView cartaView : cartasJugadorVisual) {
+            FadeTransition fade = new FadeTransition(Duration.seconds(0.5), cartaView);
+            fade.setToValue(0.4);
+            fade.play();
+        }
+    }
+    
+    private void restaurarBrilloCartas() {
+        for (ImageView cartaView : cartasJugadorVisual) {
+            FadeTransition fade = new FadeTransition(Duration.seconds(0.5), cartaView);
+            fade.setToValue(1.0);
+            fade.play();
+        }
+    }
+    
     public void toggleVisibilidadCartasDealer(boolean visible) {
         for (ImageView cartaView : cartasDealerVisual) {
             cartaView.setVisible(visible);
         }
     }
     
-    /**
-     * Aplica efecto de oscurecimiento a las cartas del jugador cuando NO es su turno
-     */
-    private void aplicarEfectoTurno() {
-        EstadoJuego estado = controladorJuego.getJuego().getEstado();
-        
-        if (estado == EstadoJuego.TURNO_JUGADOR) {
-            // Es turno del jugador: cartas normales
-            restaurarBrilloCartas();
-        } else {
-            // No es turno del jugador: oscurecer cartas
-            oscurecerCartasJugador();
-        }
-    }
-    
-    /**
-     * Oscurece las cartas del jugador con una animación suave
-     */
-    private void oscurecerCartasJugador() {
-        for (ImageView cartaView : cartasJugadorVisual) {
-            FadeTransition fade = new FadeTransition(Duration.seconds(0.5), cartaView);
-            fade.setToValue(0.4); // Opacidad reducida
-            fade.play();
-        }
-    }
-    
-    /**
-     * Restaura el brillo normal de las cartas del jugador
-     */
-    private void restaurarBrilloCartas() {
-        for (ImageView cartaView : cartasJugadorVisual) {
-            FadeTransition fade = new FadeTransition(Duration.seconds(0.5), cartaView);
-            fade.setToValue(1.0); // Opacidad completa
-            fade.play();
-        }
-    }
-    
     // ========== BOTONES DE ACCIÓN ==========
-    
-    /**
-     * Carga los botones según el tipo de juego
-     */
+
     private void cargarBotonesSegunJuego() {
         if (tipoJuego.equals("poker")) {
             cargarImagen(botonSuperiorImageView, "/img/Juego/Boton_cambioCarta.png");
@@ -265,41 +307,247 @@ public class JuegoViewController {
     
     @FXML
     private void onBotonSuperiorClicked() {
-        if (tipoJuego.equals("poker")) {
-            // Lógica para cambiar cartas
-            System.out.println("→ Cambiar cartas (Poker)");
-            // TODO: Abrir diálogo de selección de cartas
-        } else {
-            // Lógica para pedir carta
-            System.out.println("→ Pedir carta (BlackJack)");
-            // TODO: Pedir carta al dealer
+        if (controladorJuego.getJuego().getEstado() != EstadoJuego.TURNO_JUGADOR) {
+            System.out.println("No es tu turno");
+            return;
         }
         
-        // Actualizar vista
-        actualizarVista();
+        if (tipoJuego.equals("poker")) {
+            cambiarCartasPoker();
+        } else {
+            pedirCartaBlackjack();
+        }
     }
     
     @FXML
     private void onBotonInferiorClicked() {
-        System.out.println("→ Plantarse");
-        // TODO: Procesar turno del dealer
+        if (controladorJuego.getJuego().getEstado() != EstadoJuego.TURNO_JUGADOR) {
+            System.out.println("No es tu turno");
+            return;
+        }
+        
+        plantarse();
+    }
+    
+    // ========== LÓGICA DE POKER ==========
+    
+    private void cambiarCartasPoker() {
+        if (cartasSeleccionadas.isEmpty()) {
+            System.out.println("No has seleccionado ninguna carta para cambiar");
+            return;
+        }
+        
+        System.out.println("→ Cambiando " + cartasSeleccionadas.size() + " cartas (Poker)");
+        
+        // Cambiar cartas usando el controlador
+        boolean exito = controladorJuego.cambiarCartasJugador(cartasSeleccionadas);
+        
+        if (exito) {
+            jugadorSePlanto = false;
+            actualizarVista();
+            
+            // Pasar al turno del dealer
+            ejecutarTurnoDealer();
+        }
+    }
+    
+    // ========== LÓGICA DE BLACKJACK ==========
+    
+    private void pedirCartaBlackjack() {
+        System.out.println("→ Pidiendo carta (BlackJack)");
+        
+        BlackJack bj = (BlackJack) controladorJuego.getJuego();
+        Jugador jugador = bj.getJugador();
+        
+        // Pedir una carta
+        bj.pedirCarta(jugador);
+        
+        jugadorSePlanto = false;
+        actualizarVista();
+        
+        // Verificar si el jugador se pasó
+        int valorMano = bj.calcularValorMano(jugador.getMano());
+        System.out.println("Valor actual de tu mano: " + valorMano);
+        
+        if (valorMano > 21) {
+            System.out.println("¡Te pasaste de 21!");
+            finalizarRonda();
+        }
+    }
+    
+    // ========== PLANTARSE ==========
+    
+    private void plantarse() {
+        System.out.println("→ Te plantas");
+        jugadorSePlanto = true;
+        
+        // Pasar al turno del dealer
+        ejecutarTurnoDealer();
+    }
+    
+    // ========== TURNO DEL DEALER ==========
+    
+    private void ejecutarTurnoDealer() {
+        System.out.println("\n=== TURNO DEL DEALER ===");
+        
+        // Cambiar estado
+        controladorJuego.getJuego().cambiarEstado(EstadoJuego.TURNO_DEALER);
+        aplicarEfectoTurno();
+        
+        // Esperar 1.5 segundos antes de que el dealer actúe
+        PauseTransition pausa = new PauseTransition(Duration.seconds(1.5));
+        pausa.setOnFinished(e -> {
+            
+            if (tipoJuego.equals("poker")) {
+                ejecutarTurnoDealerPoker();
+            } else {
+                ejecutarTurnoDealerBlackjack();
+            }
+            
+        });
+        pausa.play();
+    }
+    
+    private void ejecutarTurnoDealerPoker() {
+        System.out.println("→ Dealer decide si cambiar cartas...");
+        
+        // El dealer decide automáticamente según su lógica
+        controladorJuego.procesarTurnoDealer();
+        
+        dealerSePlanto = true;
+        actualizarVista();
+        
+        // Finalizar ronda
+        PauseTransition pausa = new PauseTransition(Duration.seconds(1.0));
+        pausa.setOnFinished(e -> finalizarRonda());
+        pausa.play();
+    }
+    
+    private void ejecutarTurnoDealerBlackjack() {
+        BlackJack bj = (BlackJack) controladorJuego.getJuego();
+        Dealer dealer = bj.getDealer();
+        
+        int valorDealer = bj.calcularValorMano(dealer.getMano());
+        System.out.println("Valor actual del dealer: " + valorDealer);
+        
+        // Dealer pide carta si tiene 16 o menos
+        if (valorDealer <= 16 && !jugadorSePlanto) {
+            System.out.println("→ Dealer pide carta");
+            bj.pedirCarta(dealer);
+            actualizarVista();
+            
+            valorDealer = bj.calcularValorMano(dealer.getMano());
+            System.out.println("Nuevo valor del dealer: " + valorDealer);
+            
+            if (valorDealer > 21) {
+                System.out.println("¡El dealer se pasó de 21!");
+                dealerSePlanto = true;
+                finalizarRonda();
+                return;
+            }
+            
+            // Volver al turno del jugador
+            volverATurnoJugador();
+            
+        } else {
+            // Dealer se planta
+            System.out.println("→ Dealer se planta");
+            dealerSePlanto = true;
+            
+            // Si ambos se plantaron, finalizar ronda
+            if (jugadorSePlanto && dealerSePlanto) {
+                finalizarRonda();
+            } else {
+                volverATurnoJugador();
+            }
+        }
+    }
+    
+    private void volverATurnoJugador() {
+        System.out.println("\n=== TURNO DEL JUGADOR ===");
+        controladorJuego.getJuego().cambiarEstado(EstadoJuego.TURNO_JUGADOR);
+        aplicarEfectoTurno();
+    }
+    
+    // ========== FINALIZAR RONDA ==========
+    
+    private void finalizarRonda() {
+        System.out.println("\n========== FINALIZANDO RONDA ==========");
+        
+        Personaje ganador = controladorJuego.getJuego().evaluarGanador();
+        
+        Jugador jugador = controladorJuego.getJuego().getJugador();
+        Dealer dealer = controladorJuego.getJuego().getDealer();
+        
+        if (ganador == null) {
+            System.out.println("→ EMPATE - No hay cambios");
+        } else if (ganador == jugador) {
+            System.out.println("→ ¡GANASTE LA RONDA!");
+            dealer.perderVida(2);
+            System.out.println("Vida del Dealer: " + dealer.getVida());
+        } else {
+            System.out.println("→ PERDISTE LA RONDA");
+            jugador.perderVida(2);
+            System.out.println("Vida del Jugador: " + jugador.getVida());
+        }
+        
+        // Actualizar barras de vida
+        actualizarBarraVida();
+        actualizarFondo();
+        actualizarDealerGif();
+        
+        // Verificar fin del juego
+        if (!jugador.estaVivo() || !dealer.estaVivo()) {
+            finalizarJuego();
+            return;
+        }
+        
+        // Reiniciar para nueva ronda
+        PauseTransition pausa = new PauseTransition(Duration.seconds(2.5));
+        pausa.setOnFinished(e -> iniciarNuevaRonda());
+        pausa.play();
+    }
+    
+    private void iniciarNuevaRonda() {
+        System.out.println("\n========== NUEVA RONDA ==========");
+        
+        // Resetear estados
+        jugadorSePlanto = false;
+        dealerSePlanto = false;
+        
+        // Iniciar nueva ronda
+        controladorJuego.iniciarRonda();
         
         // Actualizar vista
         actualizarVista();
+        
+        System.out.println("✓ Nueva ronda iniciada - Es turno del jugador");
+    }
+    
+    private void finalizarJuego() {
+        System.out.println("\n========== FIN DEL JUEGO ==========");
+        
+        Jugador jugador = controladorJuego.getJuego().getJugador();
+        Dealer dealer = controladorJuego.getJuego().getDealer();
+        
+        if (!jugador.estaVivo()) {
+            System.out.println("→ EL DEALER HA GANADO");
+            // TODO: Mostrar pantalla de Game Over
+        } else {
+            System.out.println("→ ¡HAS GANADO!");
+            // TODO: Mostrar pantalla de Victoria
+        }
     }
     
     // ========== ACTUALIZACIÓN COMPLETA DE LA VISTA ==========
     
-    /**
-     * Actualiza todos los elementos visuales
-     */
     public void actualizarVista() {
         actualizarFondo();
         actualizarDealerGif();
         actualizarBarraVida();
         mostrarCartasJugador();
         mostrarCartasDealer();
-        aplicarEfectoTurno(); // NUEVO: Actualizar efecto de turno
+        aplicarEfectoTurno();
     }
     
     // ========== UTILIDAD: CARGA DE IMÁGENES ==========
