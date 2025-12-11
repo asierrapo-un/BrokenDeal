@@ -139,10 +139,10 @@ public class AsBajoMangaController {
             }
             
             // Label con el nombre
-            Label nombre = new Label(obtenerNombreCarta(carta));
-            nombre.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+            //Label nombre = new Label(obtenerNombreCarta(carta));
+            //nombre.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
             
-            contenedor.getChildren().addAll(imgView, nombre);
+            contenedor.getChildren().addAll(imgView);
             
             // Guardar referencia
             cartasVisual.add(contenedor);
@@ -223,8 +223,7 @@ public class AsBajoMangaController {
                 // Asignar la carta usando el setter
                 azTruco.setCartaGuardada(cartaSeleccionada);
                 
-                System.out.println("✓ As Bajo la Manga configurado: " + 
-                                 obtenerNombreCarta(cartaSeleccionada));
+                System.out.println("✓ As Bajo la Manga configurado: " + obtenerNombreCarta(cartaSeleccionada));
                 
                 break;
             }
