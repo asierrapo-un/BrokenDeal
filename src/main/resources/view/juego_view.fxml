@@ -3,7 +3,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 
-<StackPane xmlns="http://javafx.com/javafx/17.0.1"
+<StackPane fx:id="rootStackPane"
+           xmlns="http://javafx.com/javafx/17.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.ingunal.brokendeal.beta.controller.JuegoViewController"
            prefWidth="1024" prefHeight="720">
@@ -15,7 +16,7 @@
                fitHeight="720"
                smooth="false"/>
 
-    <!-- Contenedor principal -->
+    <!-- Contenedor principal del juego -->
     <BorderPane>
         
         <!-- ============= ZONA SUPERIOR: DEALER ============= -->
@@ -28,16 +29,13 @@
                            preserveRatio="false"
                            fitHeight="30"
                            smooth="false"/>
-                <!-- Ajustar fitHeight aquí para cambiar la altura vertical de la barra -->
                 
                 <ImageView fx:id="dealerImageView"
                            fitWidth="400"
                            fitHeight="200"
                            preserveRatio="true"
                            smooth="false"/>
-                <!-- Ajustar fitWidth/fitHeight aquí para cambiar el tamaño del dealer -->
                 
-                <!-- Cartas del Dealer (ocultas por defecto) -->
                 <HBox fx:id="cartasDealerBox"
                       alignment="CENTER"
                       spacing="5"
@@ -52,33 +50,26 @@
             <VBox alignment="CENTER" spacing="10" 
                   style="-fx-padding: 0 20 10 20;">
                 
-                <!-- Cartas del Jugador -->
                 <HBox fx:id="cartasJugadorBox"
                       alignment="CENTER"
                       spacing="5"
                       style="-fx-padding: 10;">
                 </HBox>
                 
-                <!-- AJUSTE: Barra de vida del Jugador más grande y de lado a lado -->
                 <ImageView fx:id="vidaJugadorImageView"
                            fitWidth="1024"
                            preserveRatio="false"
                            fitHeight="30"
                            smooth="false"/>
-                <!-- Ajustar fitHeight aquí para cambiar la altura vertical de la barra -->
                 
             </VBox>
         </bottom>
 
         <!-- ============= BOTONES DE ACCIÓN (esquina inferior derecha) ============= -->
         <right>
-            <!-- AJUSTE: Posición más pegada a la esquina inferior derecha -->
             <VBox alignment="BOTTOM_RIGHT" spacing="15"
                   style="-fx-padding: 0 45 0 0;">
-                <!-- Ajustar padding aquí: orden es arriba, derecha, abajo, izquierda -->
-                <!-- Valores más pequeños = más cerca de la esquina -->
                 
-                <!-- Botón superior (Cambiar/Pedir) -->
                 <ImageView fx:id="botonSuperiorImageView"
                            fitWidth="120"
                            fitHeight="50"
@@ -86,9 +77,7 @@
                            smooth="false"
                            onMouseClicked="#onBotonSuperiorClicked"
                            style="-fx-cursor: hand;"/>
-                <!-- Ajustar fitWidth/fitHeight aquí para cambiar tamaño de botones -->
                 
-                <!-- Botón inferior (Plantarse) -->
                 <ImageView fx:id="botonInferiorImageView"
                            fitWidth="120"
                            fitHeight="50"
@@ -96,7 +85,6 @@
                            smooth="false"
                            onMouseClicked="#onBotonInferiorClicked"
                            style="-fx-cursor: hand;"/>
-                <!-- Ajustar fitWidth/fitHeight aquí para cambiar tamaño de botones -->
                 
             </VBox>
         </right>

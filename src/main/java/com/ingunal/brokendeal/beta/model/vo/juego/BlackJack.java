@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ingunal.brokendeal.beta.model.vo.juego;
 
 import com.ingunal.brokendeal.beta.model.vo.personajes.Personaje;
@@ -11,57 +7,76 @@ import com.ingunal.brokendeal.beta.model.vo.Baraja;
 import com.ingunal.brokendeal.beta.model.vo.Mano;
 import com.ingunal.brokendeal.beta.model.vo.Carta;
 
-/**
- *
- * @author andre
- */
 public class BlackJack extends Juego {
 
     private int valorMeta;
 
-    // Constructor vacío
     public BlackJack() {
         super();
         this.valorMeta = 21;
     }
 
-    // Constructor completo
     public BlackJack(Jugador jugador, Dealer dealer, Baraja baraja, int valorMeta) {
         super(jugador, dealer, baraja);
         this.valorMeta = valorMeta;
     }
 
-    // Pide carta para cualquier personaje
     public void pedirCarta(Personaje personaje) {
         if (baraja != null && personaje != null) {
-            personaje.getMano().agregarCarta(baraja.repartirCarta());
+            Carta carta = baraja.repartirCarta();
+            if (carta != null) {
+                personaje.getMano().agregarCarta(carta);
+            } else {
+                System.out.println("ERROR: No hay cartas disponibles en la baraja");
+            }
         }
     }
 
-    // Evaluación del ganador de la ronda
     @Override
     public Personaje evaluarGanador() {
+        // VALIDACIÓN: Verificar que ambas manos tengan cartas
+        if (jugador.getMano().getCartas().isEmpty() || dealer.getMano().getCartas().isEmpty()) {
+            System.out.println("ERROR: Una o ambas manos están vacías. No se puede evaluar.");
+            return null;
+        }
+        
         int valorJugador = calcularValorMano(jugador.getMano());
         int valorDealer = calcularValorMano(dealer.getMano());
+        
+        // DEBUG: Mostrar valores
+        System.out.println("Evaluación BlackJack:");
+        System.out.println("  Jugador: " + valorJugador);
+        System.out.println("  Dealer:  " + valorDealer);
 
-        // Si los dos se pasan, empate
+        // Caso 1: Ambos se pasan de 21 → EMPATE
         if (valorJugador > valorMeta && valorDealer > valorMeta) {
+            System.out.println("  → Ambos se pasaron - Empate");
             return null;
         }
 
-        // Si uno se pasa, gana el otro
-        if (valorJugador > valorMeta) return dealer;
-        if (valorDealer > valorMeta) return jugador;
-
-        // Ambos dentro de 21: gana el más cercano
-        int difJugador = valorMeta - valorJugador;
-        int difDealer = valorMeta - valorDealer;
-
-        if (difJugador == difDealer) {
-            return null; // Empate, la ronda sigue
+        // Caso 2: Solo el jugador se pasa → DEALER GANA
+        if (valorJugador > valorMeta) {
+            System.out.println("  → Jugador se pasó - Dealer gana");
+            return dealer;
+        }
+        
+        // Caso 3: Solo el dealer se pasa → JUGADOR GANA
+        if (valorDealer > valorMeta) {
+            System.out.println("  → Dealer se pasó - Jugador gana");
+            return jugador;
         }
 
-        return difJugador < difDealer ? jugador : dealer;
+        // Caso 4: Ambos están bajo 21 → Gana el más cercano a 21
+        if (valorJugador > valorDealer) {
+            System.out.println("  → Jugador más cerca de 21 - Jugador gana");
+            return jugador;
+        } else if (valorDealer > valorJugador) {
+            System.out.println("  → Dealer más cerca de 21 - Dealer gana");
+            return dealer;
+        } else {
+            System.out.println("  → Mismo valor - Empate");
+            return null;
+        }
     }
 
     public int getValorMeta() {
@@ -87,10 +102,9 @@ public class BlackJack extends Juego {
             suma += valor;
         }
 
-        // Aplicar regla del As
-        // Si se pasa y hay Ases, cada As se convierte en 1 hasta que deje de pasarse
-        while (suma > 21 && cantidadAses > 0) {
-            suma -= 10; // convertir un As de 11, 1 (restar 10)
+        // Aplicar regla del As: Si se pasa y hay Ases, convertir As de 11 a 1
+        while (suma > valorMeta && cantidadAses > 0) {
+            suma -= 10; // convertir un As de 11 a 1 (restar 10)
             cantidadAses--;
         }
 

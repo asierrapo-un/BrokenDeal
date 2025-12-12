@@ -14,25 +14,30 @@ import java.util.List;
  */
 public class Baraja {
     private List<Carta> cartas;
+    private List<Carta> cartasOriginales; // NUEVO: Guardar copia de las cartas originales
 
     // Constructor vacío
     public Baraja() {
         this.cartas = new ArrayList<>();
+        this.cartasOriginales = new ArrayList<>();
     }
 
     // Constructor con lista
     public Baraja(List<Carta> cartas) {
-        this.cartas = cartas;
+        this.cartas = new ArrayList<>(cartas); // Crear copia
+        this.cartasOriginales = new ArrayList<>(cartas); // Guardar originales
+        System.out.println("✓ Baraja creada con " + this.cartasOriginales.size() + " cartas");
     }
-
-    // MÉTODOS A IMPLEMENTAR LUEGO
 
     public void barajar() {
         Collections.shuffle(cartas);
     }
 
     public Carta repartirCarta() {
-        if (cartas.isEmpty()) return null;
+        if (cartas.isEmpty()) {
+            System.err.println("ERROR: No hay cartas en la baraja para repartir");
+            return null;
+        }
         return cartas.remove(0);
     }
 
@@ -40,15 +45,28 @@ public class Baraja {
         cartas.remove(carta);
     }
 
+    /**
+     * Reinicia la baraja a su estado original con todas las cartas
+     */
+    public void reiniciarBaraja() {
+        cartas.clear();
+        cartas.addAll(cartasOriginales); // Restaurar desde las originales
+        barajar();
+        System.out.println("✓ Baraja reiniciada con " + cartas.size() + " cartas");
+    }
+    
+    /**
+     * Método legacy - mantener por compatibilidad
+     */
     public void reiniciarBaraja(List<Carta> cartasOriginales) {
         cartas.clear();
-        cartas.addAll(cartasOriginales);
+        cartas.addAll(this.cartasOriginales); // Usar las originales guardadas
         barajar();
     }
 
     public Carta darCartaAzBajoManga() {
         if (cartas.isEmpty()) return null;
-        return cartas.get(0); // o puedes elegir una aleatoria
+        return cartas.get(0);
     }
 
     // Getters y Setters
@@ -58,5 +76,9 @@ public class Baraja {
 
     public void setCartas(List<Carta> cartas) {
         this.cartas = cartas;
+    }
+    
+    public int cartasRestantes() {
+        return cartas.size();
     }
 }

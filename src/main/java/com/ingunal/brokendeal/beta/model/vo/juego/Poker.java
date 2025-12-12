@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ingunal.brokendeal.beta.model.vo.juego;
 
 import com.ingunal.brokendeal.beta.model.vo.personajes.Jugador;
@@ -16,69 +12,73 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- *
- * @author andre
- */
 public class Poker extends Juego {
     private int cambiosPermitidos;
 
-    // Constructor vacío
     public Poker() {
         super();
         this.cambiosPermitidos = 1;
     }
 
-    // Constructor completo
     public Poker(Jugador jugador, Dealer dealer, Baraja baraja, int cambiosPermitidos) {
         super(jugador, dealer, baraja);
         this.cambiosPermitidos = cambiosPermitidos;
     }
 
-    // Control de cambios
     public boolean permitirCambios(Personaje personaje) {
         return cambiosPermitidos > 0;
     }
 
-    // Método principal para evaluar el ganador
     @Override
     public Personaje evaluarGanador() {
+        // VALIDACIÓN: Verificar que ambas manos tengan cartas
+        if (jugador.getMano().getCartas().isEmpty() || dealer.getMano().getCartas().isEmpty()) {
+            System.out.println("ERROR: Una o ambas manos están vacías. No se puede evaluar.");
+            return null; // Empate por defecto
+        }
+        
         ResultadoPoker resJugador = evaluarManoPoker(jugador.getMano());
         ResultadoPoker resDealer = evaluarManoPoker(dealer.getMano());
+        
+        // DEBUG: Mostrar resultados
+        System.out.println("Evaluación Poker:");
+        System.out.println("  Jugador: Categoría " + resJugador.getCategoria());
+        System.out.println("  Dealer:  Categoría " + resDealer.getCategoria());
 
         int comparacion = resJugador.compareTo(resDealer);
 
-        if (comparacion > 0) return jugador;
-        if (comparacion < 0) return dealer;
-        return null; // empate exacto, ronda sin cambios
+        if (comparacion > 0) {
+            System.out.println("  → Jugador gana");
+            return jugador;
+        }
+        if (comparacion < 0) {
+            System.out.println("  → Dealer gana");
+            return dealer;
+        }
+        
+        System.out.println("  → Empate exacto");
+        return null;
     }
 
-    // Aanalizar una mano de Poker
     public ResultadoPoker evaluarManoPoker(Mano mano) {
-
         List<Carta> cartas = mano.getCartas().stream()
             .sorted((a, b) -> b.getValorNumerico() - a.getValorNumerico())
             .collect(Collectors.toList());
 
-        // Lista solo con valores
         List<Integer> valores = cartas.stream()
                 .map(Carta::getValorNumerico)
                 .collect(Collectors.toList());
 
-        // Lista de palos
         List<String> palos = cartas.stream()
                 .map(Carta::getSimbolo)
                 .collect(Collectors.toList());
 
-        // Map con frecuencia de valores
         Map<Integer, Long> frecuencia = valores.stream()
                 .collect(Collectors.groupingBy(v -> v, Collectors.counting()));
 
-        // Detecta color
         boolean esColor = palos.stream()
                 .distinct().count() == 1;
 
-        // Detecta escalera
         boolean esEscalera = true;
         for (int i = 0; i < valores.size() - 1; i++) {
             if (valores.get(i) - 1 != valores.get(i + 1)) {
@@ -87,12 +87,10 @@ public class Poker extends Juego {
             }
         }
 
-        // Lista de frecuencias ordenada (ej: [3,2], [2,2,1], [4,1], etc.)
         List<Long> frecs = frecuencia.values().stream()
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
 
-        // Evaluar jugada según categorías oficiales
         // 8. Escalera de color
         if (esEscalera && esColor) {
             return new ResultadoPoker(8, valores);
@@ -137,7 +135,6 @@ public class Poker extends Juego {
         return new ResultadoPoker(0, valores);
     }
 
-    // Ayudante para desempate
     private List<Integer> valoresPorFrecuencia(Map<Integer, Long> freq, List<Integer> ordenOriginal) {
         return ordenOriginal.stream()
                 .sorted((a, b) -> {
@@ -148,7 +145,6 @@ public class Poker extends Juego {
                 .collect(Collectors.toList());
     }
 
-    // Getters y Setters
     public int getCambiosPermitidos() {
         return cambiosPermitidos;
     }

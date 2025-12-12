@@ -12,11 +12,16 @@ import com.ingunal.brokendeal.beta.model.vo.personajes.Personaje;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,29 +37,37 @@ public class JuegoViewController {
     @FXML private HBox cartasJugadorBox;
     @FXML private ImageView botonSuperiorImageView;
     @FXML private ImageView botonInferiorImageView;
+    @FXML private StackPane rootStackPane; // Contenedor raíz para el diálogo
     
     // ========== DEPENDENCIAS ==========
     private SceneManager sceneManager;
     private ControladorJuego controladorJuego;
-    private String tipoJuego; // "poker" o "blackjack"
+    private String tipoJuego;
     
     // ========== ESTADO VISUAL ==========
     private List<ImageView> cartasJugadorVisual;
     private List<ImageView> cartasDealerVisual;
     
     // ========== CONTROL DE SELECCIÓN DE CARTAS ==========
-    private List<Integer> cartasSeleccionadas; // Índices de cartas seleccionadas
-    private int cartaSeleccionadaUnica = -1; // Para BlackJack (1 carta)
+    private List<Integer> cartasSeleccionadas;
+    private int cartaSeleccionadaUnica = -1;
     
     // ========== CONTROL DE TURNOS ==========
     private boolean jugadorSePlanto = false;
     private boolean dealerSePlanto = false;
+    
+    // ========== SISTEMA DE DIÁLOGOS ==========
+    private VBox dialogoBox;
+    private Label dialogoLabel;
+    private boolean dialogoActivo = false;
     
     @FXML
     private void initialize() {
         cartasJugadorVisual = new ArrayList<>();
         cartasDealerVisual = new ArrayList<>();
         cartasSeleccionadas = new ArrayList<>();
+        
+        // NO crear el diálogo aquí - se creará después cuando tengamos acceso al StackPane
     }
     
     // ========== SETTERS DE DEPENDENCIAS ==========
@@ -74,20 +87,84 @@ public class JuegoViewController {
     // ========== INICIALIZACIÓN DE LA VISTA ==========
     
     public void inicializarVista() {
-        // Cargar imágenes iniciales
+        // CRÍTICO: Crear el diálogo DESPUÉS de que la vista esté cargada
+        crearSistemaDialogo();
+        
         actualizarFondo();
         actualizarDealerGif();
         actualizarBarraVida();
         cargarBotonesSegunJuego();
         
-        // Mostrar cartas iniciales
         mostrarCartasJugador();
         mostrarCartasDealer();
         
-        // Aplicar oscurecimiento inicial si no es turno del jugador
         aplicarEfectoTurno();
         
         System.out.println("✓ Vista inicializada - Es turno del jugador");
+    }
+    
+    // ========== SISTEMA DE DIÁLOGO ==========
+    
+    private void crearSistemaDialogo() {
+        // Crear fondo semi-transparente con bordes redondeados
+        Rectangle fondo = new Rectangle(600, 200);
+        fondo.setFill(Color.rgb(123, 72, 54, 0.50));
+        fondo.setArcWidth(20);
+        fondo.setArcHeight(20);
+        
+        // Crear label para el texto
+        dialogoLabel = new Label("Haz clic para continuar a la siguiente ronda");
+        dialogoLabel.setTextFill(Color.WHITE);
+        dialogoLabel.setWrapText(true);
+        dialogoLabel.setMaxWidth(550);
+        dialogoLabel.setAlignment(Pos.CENTER);
+        dialogoLabel.setStyle("-fx-font-size: 20px; -fx-padding: 30;");
+        
+        // Contenedor del diálogo con el fondo y el texto superpuestos
+        dialogoBox = new VBox();
+        dialogoBox.setAlignment(Pos.CENTER);
+        dialogoBox.getChildren().addAll(fondo, dialogoLabel);
+        dialogoBox.setVisible(false);
+        StackPane.setAlignment(dialogoBox, Pos.CENTER);
+        
+        // Evento de clic para cerrar diálogo
+        dialogoBox.setOnMouseClicked(e -> cerrarDialogo());
+        dialogoBox.setStyle("-fx-cursor: hand;");
+        
+        // CRÍTICO: Agregar el dialogoBox al StackPane raíz
+        if (rootStackPane != null) {
+            rootStackPane.getChildren().add(dialogoBox);
+            System.out.println("✓ Sistema de diálogo creado y agregado al StackPane");
+        } else {
+            System.err.println("ERROR: rootStackPane es null - no se puede agregar el diálogo");
+        }
+    }
+    
+    private void mostrarDialogo(String texto) {
+        dialogoLabel.setText(texto);
+        dialogoBox.setVisible(true);
+        dialogoActivo = true;
+        
+        // Animación de aparición
+        FadeTransition fade = new FadeTransition(Duration.seconds(0.3), dialogoBox);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        fade.play();
+    }
+    
+    private void cerrarDialogo() {
+        if (!dialogoActivo) return;
+        
+        // Animación de desaparición
+        FadeTransition fade = new FadeTransition(Duration.seconds(0.3), dialogoBox);
+        fade.setFromValue(1);
+        fade.setToValue(0);
+        fade.setOnFinished(e -> {
+            dialogoBox.setVisible(false);
+            dialogoActivo = false;
+            iniciarNuevaRonda();
+        });
+        fade.play();
     }
     
     // ========== ACTUALIZACIÓN DE ELEMENTOS DINÁMICOS ==========
@@ -147,15 +224,15 @@ public class JuegoViewController {
         
         List<Carta> cartas = controladorJuego.getJuego().getJugador().getMano().getCartas();
         
+        System.out.println("DEBUG: Mostrando " + cartas.size() + " cartas del jugador");
+        
         for (int i = 0; i < cartas.size(); i++) {
             Carta carta = cartas.get(i);
             
-            // Crear contenedor para la carta
             StackPane contenedor = new StackPane();
             ImageView cartaView = crearCartaView(carta, "jugador");
             contenedor.getChildren().add(cartaView);
             
-            // Agregar interactividad
             final int indice = i;
             contenedor.setOnMouseClicked(e -> seleccionarCarta(indice, contenedor));
             contenedor.setStyle("-fx-cursor: hand;");
@@ -172,6 +249,8 @@ public class JuegoViewController {
         List<Carta> cartas = controladorJuego.getJuego().getDealer().getMano().getCartas();
         boolean mostrarCartas = controladorJuego.getJuego().getRondasVision() > 0;
         
+        System.out.println("DEBUG: Mostrando " + cartas.size() + " cartas del dealer");
+        
         for (Carta carta : cartas) {
             ImageView cartaView = crearCartaView(carta, "dealer");
             
@@ -184,24 +263,21 @@ public class JuegoViewController {
         }
     }
     
-    /**
-     * Crea un ImageView para una carta
-     */
     private ImageView crearCartaView(Carta carta, String personaje) {
         ImageView imgView = new ImageView();
         
         String ruta = "/" + carta.getImgRuta();
         cargarImagen(imgView, ruta);
         
-        if(personaje=="dealer"){
-            imgView.setFitWidth(50);  // Ajusta aquí el ancho de las cartas del dealer
-            imgView.setFitHeight(80); // Ajusta aquí el alto de las cartas del dealer
+        if(personaje.equals("dealer")){
+            imgView.setFitWidth(50);
+            imgView.setFitHeight(80);
         } else {
-            imgView.setFitWidth(90);  // Ajusta aquí el ancho de las cartas del jugador
-            imgView.setFitHeight(150); // Ajusta aquí el alto de las cartas del jugador
+            imgView.setFitWidth(90);
+            imgView.setFitHeight(150);
         }
         imgView.setPreserveRatio(true);
-        imgView.setSmooth(false); // Pixel art
+        imgView.setSmooth(false);
         
         return imgView;
     }
@@ -223,11 +299,9 @@ public class JuegoViewController {
     
     private void seleccionarCartaPoker(int indice, StackPane contenedor) {
         if (cartasSeleccionadas.contains(indice)) {
-            // Deseleccionar
             cartasSeleccionadas.remove(Integer.valueOf(indice));
             contenedor.setStyle("-fx-cursor: hand; -fx-border-color: transparent;");
         } else {
-            // Seleccionar (máximo 3)
             if (cartasSeleccionadas.size() < 3) {
                 cartasSeleccionadas.add(indice);
                 contenedor.setStyle("-fx-cursor: hand; -fx-border-color: yellow; -fx-border-width: 3;");
@@ -240,18 +314,15 @@ public class JuegoViewController {
     }
     
     private void seleccionarCartaBlackjack(int indice, StackPane contenedor) {
-        // Limpiar selección anterior
         if (cartaSeleccionadaUnica >= 0 && cartaSeleccionadaUnica < cartasJugadorBox.getChildren().size()) {
             StackPane anteriorContenedor = (StackPane) cartasJugadorBox.getChildren().get(cartaSeleccionadaUnica);
             anteriorContenedor.setStyle("-fx-cursor: hand; -fx-border-color: transparent;");
         }
         
         if (cartaSeleccionadaUnica == indice) {
-            // Deseleccionar
             cartaSeleccionadaUnica = -1;
             contenedor.setStyle("-fx-cursor: hand; -fx-border-color: transparent;");
         } else {
-            // Seleccionar nueva
             cartaSeleccionadaUnica = indice;
             contenedor.setStyle("-fx-cursor: hand; -fx-border-color: yellow; -fx-border-width: 3;");
         }
@@ -339,14 +410,12 @@ public class JuegoViewController {
         
         System.out.println("→ Cambiando " + cartasSeleccionadas.size() + " cartas (Poker)");
         
-        // Cambiar cartas usando el controlador
         boolean exito = controladorJuego.cambiarCartasJugador(cartasSeleccionadas);
         
         if (exito) {
             jugadorSePlanto = false;
             actualizarVista();
             
-            // Pasar al turno del dealer
             ejecutarTurnoDealer();
         }
     }
@@ -359,13 +428,11 @@ public class JuegoViewController {
         BlackJack bj = (BlackJack) controladorJuego.getJuego();
         Jugador jugador = bj.getJugador();
         
-        // Pedir una carta
         bj.pedirCarta(jugador);
         
         jugadorSePlanto = false;
         actualizarVista();
         
-        // Verificar si el jugador se pasó
         int valorMano = bj.calcularValorMano(jugador.getMano());
         System.out.println("Valor actual de tu mano: " + valorMano);
         
@@ -381,7 +448,6 @@ public class JuegoViewController {
         System.out.println("→ Te plantas");
         jugadorSePlanto = true;
         
-        // Pasar al turno del dealer
         ejecutarTurnoDealer();
     }
     
@@ -390,11 +456,9 @@ public class JuegoViewController {
     private void ejecutarTurnoDealer() {
         System.out.println("\n=== TURNO DEL DEALER ===");
         
-        // Cambiar estado
         controladorJuego.getJuego().cambiarEstado(EstadoJuego.TURNO_DEALER);
         aplicarEfectoTurno();
         
-        // Esperar 1.5 segundos antes de que el dealer actúe
         PauseTransition pausa = new PauseTransition(Duration.seconds(1.5));
         pausa.setOnFinished(e -> {
             
@@ -411,13 +475,11 @@ public class JuegoViewController {
     private void ejecutarTurnoDealerPoker() {
         System.out.println("→ Dealer decide si cambiar cartas...");
         
-        // El dealer decide automáticamente según su lógica
         controladorJuego.procesarTurnoDealer();
         
         dealerSePlanto = true;
         actualizarVista();
         
-        // Finalizar ronda
         PauseTransition pausa = new PauseTransition(Duration.seconds(1.0));
         pausa.setOnFinished(e -> finalizarRonda());
         pausa.play();
@@ -430,7 +492,6 @@ public class JuegoViewController {
         int valorDealer = bj.calcularValorMano(dealer.getMano());
         System.out.println("Valor actual del dealer: " + valorDealer);
         
-        // Dealer pide carta si tiene 16 o menos
         if (valorDealer <= 16 && !jugadorSePlanto) {
             System.out.println("→ Dealer pide carta");
             bj.pedirCarta(dealer);
@@ -446,15 +507,12 @@ public class JuegoViewController {
                 return;
             }
             
-            // Volver al turno del jugador
             volverATurnoJugador();
             
         } else {
-            // Dealer se planta
             System.out.println("→ Dealer se planta");
             dealerSePlanto = true;
             
-            // Si ambos se plantaron, finalizar ronda
             if (jugadorSePlanto && dealerSePlanto) {
                 finalizarRonda();
             } else {
@@ -491,34 +549,35 @@ public class JuegoViewController {
             System.out.println("Vida del Jugador: " + jugador.getVida());
         }
         
-        // Actualizar barras de vida
         actualizarBarraVida();
         actualizarFondo();
         actualizarDealerGif();
         
-        // Verificar fin del juego
         if (!jugador.estaVivo() || !dealer.estaVivo()) {
             finalizarJuego();
             return;
         }
         
-        // Reiniciar para nueva ronda
-        PauseTransition pausa = new PauseTransition(Duration.seconds(2.5));
-        pausa.setOnFinished(e -> iniciarNuevaRonda());
+        // Mostrar diálogo entre rondas
+        PauseTransition pausa = new PauseTransition(Duration.seconds(2.0));
+        pausa.setOnFinished(e -> mostrarDialogo("Haz clic para continuar a la siguiente ronda"));
         pausa.play();
     }
     
     private void iniciarNuevaRonda() {
         System.out.println("\n========== NUEVA RONDA ==========");
         
-        // Resetear estados
         jugadorSePlanto = false;
         dealerSePlanto = false;
         
-        // Iniciar nueva ronda
+        // CRÍTICO: Restaurar la baraja antes de iniciar la nueva ronda
+        System.out.println("→ Restaurando baraja (cartas restantes: " + 
+                         controladorJuego.getJuego().getBaraja().cartasRestantes() + ")");
+        controladorJuego.getJuego().getBaraja().reiniciarBaraja();
+        
+        // Iniciar nueva ronda con el controlador
         controladorJuego.iniciarRonda();
         
-        // Actualizar vista
         actualizarVista();
         
         System.out.println("✓ Nueva ronda iniciada - Es turno del jugador");
